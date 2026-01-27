@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const db = require('./db');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -48,6 +49,16 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.get('/api/rooms/status', async (req, res) => {
+  const [rows] = await db.query(`
+    SELECT r.roomID, r.roomName, IFNULL(s.isOccupied, 0) AS isOccupied
+    FROM tblstudyRooms r
+    LEFT JOIN tblroomStatus s ON r.roomID = s.roomID
+  `);
+
+  res.json(rows);
 });
 
 module.exports = app;
