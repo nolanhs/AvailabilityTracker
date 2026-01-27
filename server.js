@@ -1,40 +1,26 @@
-const express = require("express");
+// server.js
+const express = require("express"); // required because app.js uses it
 const http = require("http");
 const { Server } = require("socket.io");
+const app = require("./app"); // use your app.js
 
-const app = express();
+// create HTTP server using app.js
 const server = http.createServer(app);
+
+// attach Socket.IO
 const io = new Server(server, {
-  cors: { origin: "*" }
+  cors: { origin: "*" }, // allow frontend connections
 });
 
-app.use(express.json());
+// make io accessible in app.js
+app.set("io", io);
 
-let latestData = null;
-
-app.get("/", (req, res) => {
-  res.send("Website is running");
-});
-
-
-// ESP32 sends data here
-app.post("/api/update", (req, res) => {
-  latestData = req.body;
-  console.log("ESP32 data:", latestData);
-
-  io.emit("sensor-update", latestData);
-  res.json({ status: "ok" });
-});
-
-// Website connects here
+// log new Socket.IO connections
 io.on("connection", (socket) => {
-  console.log("Website connected");
-
-  if (latestData) {
-    socket.emit("sensor-update", latestData);
-  }
+  console.log("Website connected:", socket.id);
 });
 
+// start server
 server.listen(3000, () => {
   console.log("Server running on port 3000");
 });
