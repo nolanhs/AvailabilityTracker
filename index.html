@@ -1,90 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Character encoding -->
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Makes the page responsive on mobile devices -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Bootstrap CSS  -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
-  >
+  />
 
   <title>Eagle Vision</title>
 </head>
 
-<body class="bg-light">
-  <!--
-    Main container
-  -->
-  <div class="container mt-4">
+<body class="bg-light" style="background-color:#eedbbd; min-height: 100vh;">
 
-    <!--
-      Flex container for header items
-    -->
-    <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 p-3">
+  <!-- Header / Navbar -->
+  <nav class="navbar py-3"  style="background: linear-gradient(90deg, #194152, #2e525e, #50849a);"
+>
+    <div class="container d-flex flex-wrap justify-content-center justify-content-md-between align-items-center gap-3">
 
-      <!--
-        Logo wrapper
-      -->
-      <div class="pe-3">
+      <!-- Logo -->
+      <a class="navbar-brand text-white" href="#">
         <img
-          src="images/logo.png"
-          alt="Eagle Vision Logo"
-          width="100"
-          height="80"
+          src="images/logo.svg"
+          alt="EagleVision Logo"
+          class="img-fluid"
+          style="max-height: 160px;"
+        />
+      </a>
+
+      <!-- Action Buttons -->
+      <div class="d-flex gap-2">
+        <a
+          href="https://www.tntech.edu/"
+          target="_blank"
+          class="btn btn-outline-light"
         >
+          Visit Tennessee Tech
+        </a>
+
+        <a
+          href="https://www.tntech.edu/maps/index.php"
+          target="_blank"
+          class="btn btn-outline-light d-flex align-items-center gap-2"
+        >
+          <span>Campus Map</span>
+        </a>
       </div>
 
-      <!--
-        Button linking to Tennessee Tech website
-      -->
-      <a
-        href="https://www.tntech.edu/"
-        target="_blank"
-        class="btn btn-outline-secondary"
-      >
-        Visit Tennessee Tech
-      </a>
-
-      <!--
-        Campus map button
-      -->
-      <a
-        href="https://www.tntech.edu/maps/index.php"
-        target="_blank"
-        class="btn btn-primary d-flex align-items-center gap-2"
-      >
-        <!-- Small icon inside the button -->
-        <img
-          src="images/map.png"
-          alt=""
-          width="24"
-          height="24"
-        >
-
-        <!-- Button text -->
-        <span>Campus Map</span>
-      </a>
-
     </div>
+  </nav>
 
-    <!--
-      Search input field
-    -->
+  <!-- Main Content -->
+  <main class="container py-4">
+
+    <label for="roomSearch" class="form-label visually-hidden">
+      Search Rooms
+    </label>
+
     <input
       type="text"
-      class="form-control mt-4"
+      id="roomSearch"
+      class="form-control"
       placeholder="Search Rooms..."
-    >
+    />
 
-  </div>
+  </main>
 
-  <!-- Bootstrap JavaScript  -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
