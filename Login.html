@@ -22,13 +22,25 @@
             <div class="card-body">
                 <h2 class="text-center">EagleVision Login</h2>
                 <!-- Semmantic tagging for forms -->
-                <form>
+                <form novalidate>
                     <label class="form-label" for="txtEmail">Email</label>
-                    <input class="form-control" id="txtEmail" type="email">
+                    <input class="form-control" id="txtEmail" type="email" placeholder="username@tntech.edu">
                     <label class="form-label" for="txtPassword">Password</label>
                     <input class="form-control"  id="txtPassword" type="password">
+                    <input type="checkbox" onclick="myFunction()">Show Password
+
+                    <script>
+                        function myFunction() {
+                            var x = document.getElementById("txtPassword");
+                            if (x.type === "password") {
+                                x.type = "text";
+                            } else {
+                                x.type = "password";
+                            }
+                        }
+                    </script>
                     <hr />
-                    <button id="btnLogin" class="btn btn-primary col-12 mt-2" type="button">Login</button>
+                    <a href="index.html"><button id="btnLogin" class="btn btn-primary col-12 mt-2" type="button">Login</button></a>
                     <a href="register.html"><button id="btnRegister" class="btn btn-secondary col-12 mt-2" type="button">Register</button></a>
                 </form>
             </div>
