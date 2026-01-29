@@ -1,3 +1,5 @@
+// AI was used to help program this file
+
 // for the bluetooth scanning
 #include <BLEDevice.h>
 #include <BLEUtils.h>
