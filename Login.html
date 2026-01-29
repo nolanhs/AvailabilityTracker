@@ -22,7 +22,7 @@
             <div class="card-body">
                 <h2 class="text-center">EagleVision Login</h2>
                 <!-- Semmantic tagging for forms -->
-                <form novalidate>
+                <form action="login.php" method="post" novalidate>
                     <label class="form-label" for="txtEmail">Email</label>
                     <input class="form-control" id="txtEmail" type="email" placeholder="username@tntech.edu">
                     <label class="form-label" for="txtPassword">Password</label>
@@ -40,7 +40,21 @@
                         }
                     </script>
                     <hr />
-                    <a href="index.html"><button id="btnLogin" class="btn btn-primary col-12 mt-2" type="button">Login</button></a>
+                    <button id="btnLogin" class="btn btn-primary col-12 mt-2" type="button" onclick="validate()">Login</button>
+                    <script>
+                        function validate() {
+                            var username = document.getElementById("txtEmail").value;
+                            var password = document.getElementById("txtPassword").value;
+                            if (username == "admin" && password == "tempPass") {
+                                alert("Login successfully");
+                                window.location = "index.html";
+                                return false;
+                            } else {
+                                alert("Enter a valid account");
+                                    return false;
+                                }
+                            }
+                        </script>
                     <a href="register.html"><button id="btnRegister" class="btn btn-secondary col-12 mt-2" type="button">Register</button></a>
                 </form>
             </div>
