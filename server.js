@@ -1,4 +1,4 @@
-// server.js
+// AI was used to help program this file
 const express = require("express"); // required because app.js uses it
 const http = require("http");
 const { Server } = require("socket.io");
@@ -24,3 +24,4 @@ io.on("connection", (socket) => {
 server.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+
