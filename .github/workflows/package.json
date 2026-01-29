@@ -5,5 +5,11 @@
     "lint:js": "eslint \"../**/*.js\"",
     "lint:html": "htmlhint \"../**/*.html\"",
     "lint:css": "stylelint \"../**/*.css\""
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "htmlhint": "^1.8.0",
+    "prettier": "^3.8.1",
+    "stylelint": "^17.0.0"
   }
 }
