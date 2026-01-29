@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "ci": "npm run format:check && npm run lint:js && npm run lint:html && npm run lint:css",
+    "format:check": "prettier -c \"**/*.{html,css,js,json,md}\"",
+    "lint:js": "eslint \"**/*.js\"",
+    "lint:html": "htmlhint \"**/*.html\"",
+    "lint:css": "stylelint \"**/*.css\""
+  }
+}
