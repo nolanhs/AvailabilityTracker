@@ -1,10 +1,12 @@
 // AI was used to help program this file
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const db = require('./db');
+var mqtt = require('mqtt');
+// const db = require('./db');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -26,7 +28,45 @@ app.use('/users', usersRouter);
 
 // API endpoint for ESP32 updates
 let latestData = null;
-app.post('/api/update', function(req, res) {
+// MQTT configuration (can be overridden via env)
+const MQTT_URL = process.env.MQTT_URL || 'mqtt://localhost:1883';
+const MQTT_TOPIC = process.env.MQTT_TOPIC || 'ble/presence';
+
+// connect to MQTT broker and subscribe to ESP32 topic
+const mqttClient = mqtt.connect(MQTT_URL, { reconnectPeriod: 5000 });
+
+mqttClient.on('connect', (connack) => {
+  console.log('Connected to MQTT broker at', MQTT_URL);
+  console.log('MQTT connack:', connack && typeof connack === 'object' ? JSON.stringify(connack) : connack);
+  mqttClient.subscribe(MQTT_TOPIC, { qos: 1 }, (err) => {
+    if (err) console.error('MQTT subscribe error:', err);
+    else console.log('Subscribed to', MQTT_TOPIC);
+  });
+});
+
+mqttClient.on('error', (err) => {
+  try {
+    console.error('MQTT error:', err && (err.message || JSON.stringify(err)));
+  } catch (e) {
+    console.error('MQTT error (unknown):', err);
+  }
+});
+
+mqttClient.on('reconnect', () => console.log('MQTT client reconnecting...'));
+mqttClient.on('offline', () => console.log('MQTT client offline'));
+mqttClient.on('close', () => console.log('MQTT connection closed'));
+
+mqttClient.on('message', (topic, message) => {
+  const payload = message.toString();
+  const detected = payload === '1' || payload.toLowerCase() === 'true';
+  latestData = { topic, payload, detected, ts: Date.now() };
+  // store on app and notify websocket clients if available
+  app.set('latestData', latestData);
+  console.log('MQTT message:', topic, payload);
+  const io = app.get('io');
+  if (io) io.emit('sensor-update', latestData);
+});
+app.post('/api/update', function (req, res) {
   latestData = req.body;
   req.app.set('latestData', latestData);
   console.log('ESP32 data:', latestData);
@@ -36,13 +76,18 @@ app.post('/api/update', function(req, res) {
 
   res.json({ status: 'ok' });
 });
+
+// expose latest data via a simple API for the frontend
+app.get('/api/latest', function (req, res) {
+  res.json({ latestData: req.app.get('latestData') || null });
+});
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
