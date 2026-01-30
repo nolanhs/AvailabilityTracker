@@ -1,0 +1,122 @@
+create database dbesp32;
+
+use dbesp32;
+
+create table tblUsers (
+	userID INT auto_increment,
+    Email varchar(255) NOT NULL unique,
+    passwordHash varchar(255) NOT NULL,
+    Role varchar(20) NOT NULL DEFAULT 'viewer',
+    Major varchar(50) NOT NULL,
+    primary key (userID)
+);
+
+create table tblBuildings (
+	buildingID INT auto_increment,
+    buildingName varchar(255) NOT NULL,
+    buildingCode varchar(32) NOT NULL,
+    primary key (buildingID)
+);
+
+create table tblstudyRooms (
+	roomID INT auto_increment,
+    buildingID INT NOT NULL,
+    roomName varchar(255) NOT NULL,
+    floorNumber INT,
+    scannerID varchar (64),
+    createdAt datetime NOT NULL default current_timestamp,
+    primary key (roomID)
+);
+
+create table tblroomStatus (
+	roomID INT NOT NULL,
+    isOccupied BOOLEAN NOT NULL,
+    enteredAt datetime,
+    lastSeenat datetime,
+    updatedAt datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    primary key(roomID)
+);
+
+create table tblRoomhistory (
+	historyID INT auto_increment,
+    roomID INT NOT NULL,
+    isOccupied BOOLEAN NOT NULL,
+    startedAt DATETIME NOT NULL DEFAULT current_timestamp,
+    endedAt datetime,
+    Cause varchar(255),
+    primary key(historyID)
+);
+
+insert into tblUsers (Email, passwordHash, Role, Major)
+Values('admin123@tntech.edu', 'Admin123!', 'Admin', 'computer science');
+
+insert into tblUsers (Email, passwordHash, Role, Major)
+Values('billy123@tntech.edu', 'billy123!', 'viewer', 'computer science');
+
+insert into tblUsers (Email, passwordHash, Role, Major)
+Values('joe123@tntech.edu', 'joe123!', 'viewer', 'agriculture');
+
+insert into tblBuildings (buildingName, buildingCode)
+Values('Engineering Building', 'ENG');
+
+insert into tblBuildings (buildingName, buildingCode)
+Values('Bruner', 'BRUN');
+
+INSERT INTO tblstudyRooms (buildingID, roomName, floorNumber, scannerID)
+Values(1, 367, 3, 1);
+
+INSERT INTO tblstudyRooms (buildingID, roomName, floorNumber, scannerID)
+Values(1, 242, 2, 2);
+
+INSERT INTO tblroomStatus (roomID, isOccupied, enteredAt, lastSeenat)
+VALUES (1, FALSE, NULL, NULL);
+
+-- room occupied
+UPDATE tblroomStatus
+SET isOccupied = TRUE,
+    enteredAt = NOW(),
+    lastSeenat = NOW()
+WHERE roomID = 1;
+
+-- close history
+UPDATE tblRoomhistory
+SET endedAt = NOW()
+WHERE roomID = 1 AND endedAt IS NULL;
+
+-- new history
+INSERT INTO tblRoomhistory (roomID, isOccupied, startedAt, endedAt, Cause)
+VALUES (1, TRUE, NOW(), NULL, 'presence detected');
+
+-- room empty
+INSERT INTO tblRoomhistory (roomID, isOccupied, startedAt, endedAt, Cause)
+VALUES (1, FALSE, NOW(), NULL, 'no devices detected');
+
+-- last 7 days history
+SELECT *
+FROM tblRoomhistory
+WHERE roomID = 1
+  AND (
+    startedAt >= (NOW() - INTERVAL 7 DAY)
+    OR endedAt IS NULL
+    OR endedAt >= (NOW() - INTERVAL 7 DAY)
+  )
+ORDER BY startedAt;
+
+-- how long room was occupied for 7 days
+SELECT 
+    SUM(
+        TIMESTAMPDIFF(
+            MINUTE,
+            startedAt,
+            COALESCE(endedAt, NOW())
+        )
+    ) AS OccupiedMinutes
+FROM tblRoomhistory
+WHERE roomID = 1
+  AND isOccupied = TRUE
+  AND startedAt >= (NOW() - INTERVAL 7 DAY);
+
+-- delete last 7 days
+DELETE FROM tblRoomhistory
+WHERE endedAt IS NOT NULL
+  AND endedAt < (NOW() - INTERVAL 7 DAY);
