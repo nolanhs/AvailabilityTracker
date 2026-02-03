@@ -4,19 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches: [backend-devops]
-  pull_request:
-    branches: [backend-devops]
 
 jobs:
   backend:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Backend placeholder step
-        run: echo "Backend CI is running"
+      - run: echo 'Backend CI is now registered'
