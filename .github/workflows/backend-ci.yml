@@ -3,11 +3,18 @@ name: Backend CI
 on:
   workflow_dispatch:
   push:
-    branches: [backend-devops]
+    branches: [backend-devops, main]
+  pull_request:
 
 jobs:
   backend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo 'Backend CI is now registered'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Print repo files (debug)
+        run: ls -la
