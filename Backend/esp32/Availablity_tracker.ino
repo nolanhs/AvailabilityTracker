@@ -1,88 +1,103 @@
-// AI was used to help program this file
-
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <NimBLEDevice.h>
 
-// ===== CONFIG =====
-const char* ssid = "YOUR_WIFI";
-const char* password = "YOUR_PASSWORD";
+/* ========= CONFIG ========= */
 
-const char* mqttServer = "YOUR_SERVER_IP";
-const int   mqttPort   = 1883;
-const char* mqttTopic  = "ble/presence";
+// WiFi
+const char* ssid = "Luke's wifi";
+const char* password = "GoGoEagle#4812";
 
-const int scanTime = 5;                     // seconds
-const unsigned long SEND_INTERVAL = 3000;   // ms
+// MQTT broker (PC running Mosquitto)
+const char* mqttServer = "192.168.1.6";   // CHANGE if needed
+const int mqttPort = 1883;
+const char* mqttTopic = "ble/presence";
 
-// ===== GLOBALS =====
+// BLE
+int scanTime = 10;          // seconds
+int rssiThreshold = -60;
+
+/* ========= GLOBALS ========= */
+
 WiFiClient espClient;
-PubSubClient mqtt(espClient);
+PubSubClient mqttClient(espClient);
 
 NimBLEScan* pBLEScan;
-volatile bool deviceDetected = false;
-unsigned long lastSend = 0;
+bool occupancySent = false;
 
-// ===== BLE CALLBACK =====
-class MyAdvertisedDeviceCallbacks : public NimBLEScanCallbacks {
-  void onResult(const NimBLEAdvertisedDevice* d) override {
-    if (d->getRSSI() >= -80) {               // relaxed threshold
-      deviceDetected = true;
+/* ========= MQTT ========= */
+
+void connectToMQTT() {
+  while (!mqttClient.connected()) {
+    Serial.print("Connecting to MQTT...");
+    if (mqttClient.connect("ESP32-Presence")) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(mqttClient.state());
+      Serial.println(" retrying in 5s");
+      delay(5000);
+    }
+  }
+}
+
+/* ========= BLE CALLBACK ========= */
+
+class MyScanCallbacks : public NimBLEScanCallbacks {
+  void onResult(const NimBLEAdvertisedDevice* device) override {
+    int rssi = device->getRSSI();
+
+    if (rssi >= rssiThreshold && !occupancySent) {
+      Serial.print("BLE device detected | RSSI: ");
+      Serial.println(rssi);
+
+      const char* payload = "1";   // presence detected
+      mqttClient.publish(mqttTopic, payload, true);
+
+      Serial.println("MQTT published: ble/presence = 1");
+      occupancySent = true;
     }
   }
 };
 
-// ===== MQTT CONNECT =====
-void reconnectMQTT() {
-  while (!mqtt.connected()) {
-    mqtt.connect("esp32-ble-scanner");
-  }
-}
+/* ========= SETUP ========= */
 
-// ===== SETUP =====
 void setup() {
   Serial.begin(115200);
 
-  // WiFi
+  /* WiFi */
   WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
   Serial.println("\nWiFi connected");
 
-  // MQTT
-  mqtt.setServer(mqttServer, mqttPort);
+  /* MQTT */
+  mqttClient.setServer(mqttServer, mqttPort);
+  connectToMQTT();
 
-  // BLE
+  /* BLE */
   NimBLEDevice::init("");
-  NimBLEDevice::setPower(ESP_PWR_LVL_P9);
-
   pBLEScan = NimBLEDevice::getScan();
-  pBLEScan->setScanCallbacks(new MyAdvertisedDeviceCallbacks());
-  pBLEScan->setActiveScan(true);
-  pBLEScan->setInterval(100);
-  pBLEScan->setWindow(100);                  // 100% duty cycle
-  pBLEScan->setDuplicateFilter(false);
+  pBLEScan->setScanCallbacks(new MyScanCallbacks());
+  pBLEScan->setActiveScan(false);
 }
 
-// ===== LOOP =====
+/* ========= LOOP ========= */
+
 void loop() {
-  if (!mqtt.connected()) {
-    reconnectMQTT();
+  if (!mqttClient.connected()) {
+    connectToMQTT();
   }
-  mqtt.loop();
+  mqttClient.loop();
 
-  deviceDetected = false;
+  occupancySent = false;
 
-  pBLEScan->clearResults();
+  Serial.println("Scanning BLE...");
   pBLEScan->start(scanTime, false);
+  Serial.println("Scan done");
 
-  unsigned long now = millis();
-  if (now - lastSend >= SEND_INTERVAL) {
-    mqtt.publish(mqttTopic, deviceDetected ? "1" : "0", true);
-    lastSend = now;
-  }
-
-  delay(1000);
+  delay(60000);  // scan every minute
 }
