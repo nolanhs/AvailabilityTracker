@@ -1,0 +1,43 @@
+name: Database CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, backend-devops, database-devops]
+  pull_request:
+
+jobs:
+  database:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: availability
+          POSTGRES_USER: dev
+          POSTGRES_PASSWORD: devpass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U dev"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install psql
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Apply schema
+        run: |
+          for file in database/init/*.sql; do
+            echo "Applying "
+            psql postgresql://dev:devpass@localhost:5432/availability -f ""
+          done
+
+      - name: Verify tables exist
+        run: |
+          psql postgresql://dev:devpass@localhost:5432/availability -c "\dt"
