@@ -32,8 +32,13 @@ let latestData = null;
 const MQTT_URL = process.env.MQTT_URL || 'mqtt://localhost:1883';
 const MQTT_TOPIC = process.env.MQTT_TOPIC || 'ble/presence';
 
-// connect to MQTT broker and subscribe to ESP32 topic
-const mqttClient = mqtt.connect(MQTT_URL, { reconnectPeriod: 5000 });
+// connect to MQTT broker
+const mqttClient = mqtt.connect(MQTT_URL, {
+  clientId: 'node-backend-01',
+  reconnectPeriod: 5000,
+  clean: true
+});
+
 
 mqttClient.on('connect', (connack) => {
   console.log('Connected to MQTT broker at', MQTT_URL);
