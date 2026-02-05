@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <title>Eagle Vision</title>
+</head>
+
+<body style="
+  min-height: 100vh;
+  background: linear-gradient(#f3e7c9 0%, #f3e7c9 25%, #e6d9f2 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+">
+
+
+  <!-- Header / Navbar -->
+    <div class="container d-flex flex justify-content-center align-items-center">
+
+      <!-- Logo -->
+      <a class="navbar-brand text-white" href="#">
+        <img
+          src="logo.svg"
+          alt="EagleVision Logo"
+          class="img-fluid"
+          style="max-height: 200px;"
+        />
+      </a>
+
+    </div>
+  </nav>
+<div class="my-0"></div>
+  <!-- Main Content -->
+  <main class="container py-0">
+
+    <label for="roomSearch" class="form-label visually-hidden">
+      Search Rooms
+    </label>
+
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search Rooms..."
+      id="roomSearch"
+    />
+    
+    <div class="mt-4">
+      <label for="campus">Choose a location:</label>
+      <select id="campus" name="campus">
+        <option value="">-- Select --</option>
+        <option value="AIEB">AIEB</option>
+        <option value="Library">Library</option>
+        <option value="LSC">LSC</option>
+      </select>
+    </div>
+  
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
+
+      <div data-room="AIEB 216" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 216</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 205" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 205</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 237" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 237</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 238" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 238</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 242" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 242</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 261" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 261</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 253" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 253</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 241" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 241</strong></p>
+        </div>
+      </div>
+
+      <div data-room="AIEB 376" data-building="AIEB" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>AIEB 376</strong></p>
+        </div>
+      </div>
+
+      <div data-room="LIBR 223" data-building="Library" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>LIBR 223</strong></p>
+          <a href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button class="btn btn-primary btn-sm mt-2">Book</button></a>
+        </div>
+      </div>
+
+      <div data-room="LIBR 224" data-building="Library" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>LIBR 224</strong></p>
+          <a href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button class="btn btn-primary btn-sm mt-2">Book</button></a>
+        </div>
+      </div>
+
+      <div data-room="LIBR 225" data-building="Library" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>LIBR 225</strong></p>
+          <a href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button class="btn btn-primary btn-sm mt-2">Book</button></a>
+        </div>
+      </div>
+
+      <div data-room="LSC 1" data-building="LSC" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>LSC 1</strong></p>
+        </div>
+      </div>
+
+      <div data-room="LSC 2" data-building="LSC" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>LSC 2</strong></p>
+        </div>
+      </div>
+
+      <div data-room="LSC 3" data-building="LSC" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p><strong>LSC 3</strong></p>
+        </div>
+      </div>
+    </div>
+
+      <h4 class="text-center mt-4">Live Traffic Tracker</h4>
+
+    <div style="display: flex; gap: 24px; margin-top: 16px; justify-content: center; flex-wrap: wrap;">
+
+      <div data-room="The Fit" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p style="margin: 0;"><strong>The Fit</strong></p>
+          <p style="margin: 0;"><strong>BUSY</strong></p>
+          <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+        </div>
+      </div>
+
+      <div data-room="The Caf" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: yellow;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p style="margin: 0;"><strong>The Caf</strong></p>
+          <p style="margin: 0;"><strong>MODERATELY BUSY</strong></p>
+          <p style="margin: 0;">Last updated: <strong>5 Minutes Ago</strong></p>
+        </div>
+      </div>
+
+      <div data-room="Library" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p style="margin: 0;"><strong>Library</strong></p>
+          <p style="margin: 0;"><strong>NOT BUSY</strong></p>
+          <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+        </div>
+      </div>
+
+    <iframe
+      src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
+      width="100%"
+      height="800"
+      style="border: 1px solid black; border-radius: 12px;"
+    ></iframe>
+
+  </div>
+
+  </main>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const roomSearch = document.getElementById("roomSearch");
+  const campusSelect = document.getElementById("campus");
+
+  function applyFilters() {
+    const query = roomSearch.value.toLowerCase().trim();
+    const selectedCampus = campusSelect.value;
+
+    document.querySelectorAll("[data-room]").forEach(card => {
+      const roomName = card.dataset.room.toLowerCase();
+      const building = card.dataset.building;
+
+      const matchesSearch = roomName.includes(query);
+      const matchesCampus =
+        selectedCampus === "" || building === selectedCampus;
+
+      card.style.display = (matchesSearch && matchesCampus) ? "" : "none";
+    });
+  }
+
+  roomSearch.addEventListener("input", applyFilters);
+  campusSelect.addEventListener("change", applyFilters);
+</script>
+
+
+</body>
+</html>

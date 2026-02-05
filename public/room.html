@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Room Occupancy</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .status {
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .occupied {
+            color: #c0392b;
+        }
+
+        .vacant {
+            color: #16a085;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Room Status</h1>
+        <div id="status" class="status">Waiting for data...</div>
+        <div id="ts" style="font-size:0.9rem; color:#666; margin-top:8px"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const statusEl = document.getElementById('status');
+        const tsEl = document.getElementById('ts');
+
+        const socket = io();
+        socket.on('connect', () => console.log('connected to server'));
+
+        function show(latest) {
+            const payload = (latest && latest.payload) ? String(latest.payload) : null;
+            const occupied = payload === '1' || payload === 'true' || (latest && latest.detected === true);
+            if (occupied) {
+                statusEl.textContent = 'The room is occupied';
+                statusEl.classList.remove('vacant');
+                statusEl.classList.add('occupied');
+            } else {
+                statusEl.textContent = 'The room is not occupied';
+                statusEl.classList.remove('occupied');
+                statusEl.classList.add('vacant');
+            }
+            if (latest && latest.ts) {
+                const d = new Date(latest.ts);
+                tsEl.textContent = 'Updated: ' + d.toLocaleString();
+            } else {
+                tsEl.textContent = '';
+            }
+        }
+
+        // listen for realtime updates
+        socket.on('sensor-update', (data) => {
+            console.log('sensor-update', data);
+            show(data);
+        });
+
+        // optionally fetch the latest value when page loads
+        fetch('/api/latest')
+            .then(r => r.json())
+            .then(obj => { if (obj && obj.latestData) show(obj.latestData); })
+            .catch(() => { });
+    </script>
+</body>
+
+</html>
