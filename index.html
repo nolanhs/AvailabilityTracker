@@ -95,7 +95,7 @@
       font-weight: 800;
     }
 
-    /* ✅ ADDED: white cards + boolean status accent */
+    /* ADDED: white cards + boolean status accent */
     .room-card{
       background: rgba(255,255,255,0.75) !important;
     }
@@ -459,7 +459,6 @@
         <div class="map-head">
           <span><i class="bi bi-map"></i> Campus Map</span>
           <span style="color: rgba(0,0,0,0.6); font-weight: 700;">
-            <i class="bi bi-arrows-fullscreen"></i> Explore
           </span>
         </div>
         <iframe
@@ -487,12 +486,12 @@
     const campusSelect = document.getElementById("campus");
     const resultsCount = document.getElementById("resultsCount");
 
-    // ✅ CHANGED: derive label from boolean, not background
+    // CHANGED: derive label from boolean, not background
     function statusFromOccupiedBool(occupiedStr) {
       return occupiedStr === "true" ? "OCCUPIED" : "VACANT";
     }
 
-    // ✅ CHANGED: inject badges based on data-occupied=true/false
+    // CHANGED: inject badges based on data-occupied=true/false
     function addStatusBadges() {
       document.querySelectorAll(".room-card").forEach(card => {
         if (card.querySelector(".ev-badge")) return;
