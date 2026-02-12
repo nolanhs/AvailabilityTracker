@@ -36,9 +36,12 @@
 
     /* controls */
     .ev-control {
-      border-radius: 14px !important;
+      border-radius: 999px !important;
       border: 1px solid rgba(0,0,0,0.12) !important;
       background: rgba(255,255,255,0.70) !important;
+      backdrop-filter: blur(8px);
+      padding: 8px 14px !important;
+      font-weight: 600;
     }
 
     /* your cards, but cooler */
@@ -116,7 +119,6 @@
   background-repeat: no-repeat;
 ">
 
-
   <!-- Header / Navbar -->
     <div class="container d-flex flex justify-content-center align-items-center">
 
@@ -155,6 +157,22 @@
         <option value="LSC">LSC</option>
       </select>
     </div>
+
+    <style>
+      #campus {
+        padding: 8px 14px;
+        border-radius: 12px; /* Rounded corners */
+        border: 1px solid #ccc;
+        outline: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      #campus:focus {
+        border-color: black;
+      }
+    </style>
 
         <div class="mt-3" style="display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
       <div id="resultsCount" class="ev-pill">
