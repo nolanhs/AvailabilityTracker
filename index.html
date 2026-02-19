@@ -4,12 +4,111 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+    <!-- ADD THIS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
   <title>Eagle Vision</title>
+
+  <style>
+    .ev-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.55);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .ev-pill {
+      border: 1px solid rgba(0,0,0,0.10);
+      background: rgba(255,255,255,0.65);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    /* controls */
+    .ev-control {
+      border-radius: 999px !important;
+      border: 1px solid rgba(0,0,0,0.12) !important;
+      background: rgba(255,255,255,0.70) !important;
+      backdrop-filter: blur(8px);
+      padding: 8px 14px !important;
+      font-weight: 600;
+    }
+
+    /* your cards, but cooler */
+    .ev-card {
+      border: 1px solid rgba(0,0,0,0.12) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08) !important;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .ev-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.12) !important;
+    }
+
+    .ev-badge {
+      font-size: 0.82rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.12);
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      background: rgba(255,255,255,0.65);
+    }
+
+    .ev-legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .ev-section-title {
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    .map-card {
+      margin-top: 22px;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+      width: 100%;
+      max-width: 1100px;
+    }
+    .map-head {
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      font-weight: 800;
+    }
+
+    /* ADDED: white cards + boolean status accent */
+    .room-card{
+      background: rgba(255,255,255,0.75) !important;
+    }
+    .room-card[data-occupied="true"]{
+      border-left: 8px solid #b42318 !important;
+    }
+    .room-card[data-occupied="false"]{
+      border-left: 8px solid #117a3a !important;
+    }
+  </style>
+
 </head>
 
 <body style="
@@ -18,7 +117,6 @@
   background-attachment: fixed;
   background-repeat: no-repeat;
 ">
-
 
   <!-- Header / Navbar -->
     <div class="container d-flex flex justify-content-center align-items-center">
@@ -34,7 +132,6 @@
       </a>
 
     </div>
-  </nav>
 <div class="my-0"></div>
   <!-- Main Content -->
   <main class="container py-0">
@@ -46,24 +143,65 @@
     <input
       type="text"
       class="form-control"
-      placeholder="Search Rooms..."
+      placeholder="Search Rooms... (ex: 216, AIEB, LIBR)"
       id="roomSearch"
     />
     
     <div class="mt-4">
-      <label for="campus">Choose a location:</label>
+      <label for="campus">Location:</label>
       <select id="campus" name="campus">
-        <option value="">-- Select --</option>
+        <option value="">All</option>
         <option value="AIEB">AIEB</option>
         <option value="Library">Library</option>
         <option value="LSC">LSC</option>
       </select>
     </div>
+
+    <style>
+      #campus {
+        padding: 8px 14px;
+        border-radius: 12px; /* Rounded corners */
+        border: 1px solid #ccc;
+        outline: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      #campus:focus {
+        border-color: black;
+      }
+    </style>
+
+        <div class="mt-3" style="display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
+      <div id="resultsCount" class="ev-pill">
+        <i class="bi bi-grid-3x3-gap"></i> Results: 0
+      </div>
+
+      <div class="ev-legend">
+        <span class="ev-badge" style="color:#117a3a; border-color: rgba(17,122,58,0.25); background: rgba(17,122,58,0.10);">
+          <i class="bi bi-check-circle"></i> Vacant
+        </span>
+        <span class="ev-badge" style="color:#b42318; border-color: rgba(180,35,24,0.25); background: rgba(180,35,24,0.10);">
+          <i class="bi bi-x-circle"></i> Occupied
+        </span>
+        <span class="ev-badge" style="color:#8a6a00; border-color: rgba(138,106,0,0.25); background: rgba(255,193,7,0.18);">
+          <i class="bi bi-dash-circle"></i> Moderate
+        </span>
+      </div>
+    </div>
   
   <div style="max-width: 1100px; margin: 0 auto;">
+  </div>
+
+  <h4 class="text-center mt-4 ev-section-title">
+    <img src="CollabRoom.svg" 
+    style="max-height: 60px;"/>Collaboration Rooms</h4>
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 16px;">
     <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
 
-      <div data-room="AIEB 216" data-building="AIEB" style="
+      <div data-room="AIEB 216" data-building="AIEB" data-occupied="false" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -73,11 +211,11 @@
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <p><strong>AIEB 216</strong></p>
+          <p style="margin:0;"><strong>AIEB 216</strong></p>
         </div>
       </div>
 
-      <div data-room="AIEB 205" data-building="AIEB" style="
+      <div data-room="AIEB 205" data-building="AIEB" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -91,7 +229,7 @@
         </div>
       </div>
 
-      <div data-room="AIEB 237" data-building="AIEB" style="
+      <div data-room="AIEB 237" data-building="AIEB" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -105,7 +243,7 @@
         </div>
       </div>
 
-      <div data-room="AIEB 238" data-building="AIEB" style="
+      <div data-room="AIEB 238" data-building="AIEB" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -119,7 +257,7 @@
         </div>
       </div>
 
-      <div data-room="AIEB 242" data-building="AIEB" style="
+      <div data-room="AIEB 242" data-building="AIEB" data-occupied="false" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -133,7 +271,7 @@
         </div>
       </div>
 
-      <div data-room="AIEB 261" data-building="AIEB" style="
+      <div data-room="AIEB 261" data-building="AIEB" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -147,7 +285,7 @@
         </div>
       </div>
 
-      <div data-room="AIEB 253" data-building="AIEB" style="
+      <div data-room="AIEB 253" data-building="AIEB" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -161,7 +299,7 @@
         </div>
       </div>
 
-      <div data-room="AIEB 241" data-building="AIEB" style="
+      <div data-room="AIEB 241" data-building="AIEB" data-occupied="false" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -175,7 +313,7 @@
         </div>
       </div>
 
-      <div data-room="AIEB 376" data-building="AIEB" style="
+      <div data-room="AIEB 376" data-building="AIEB" data-occupied="false" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -189,7 +327,7 @@
         </div>
       </div>
 
-      <div data-room="LIBR 223" data-building="Library" style="
+      <div data-room="LIBR 223" data-building="Library" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -204,7 +342,7 @@
         </div>
       </div>
 
-      <div data-room="LIBR 224" data-building="Library" style="
+      <div data-room="LIBR 224" data-building="Library" data-occupied="false" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -219,7 +357,7 @@
         </div>
       </div>
 
-      <div data-room="LIBR 225" data-building="Library" style="
+      <div data-room="LIBR 225" data-building="Library" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -234,7 +372,7 @@
         </div>
       </div>
 
-      <div data-room="LSC 1" data-building="LSC" style="
+      <div data-room="LSC 1" data-building="LSC" data-occupied="false" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -248,7 +386,7 @@
         </div>
       </div>
 
-      <div data-room="LSC 2" data-building="LSC" style="
+      <div data-room="LSC 2" data-building="LSC" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -262,7 +400,7 @@
         </div>
       </div>
 
-      <div data-room="LSC 3" data-building="LSC" style="
+      <div data-room="LSC 3" data-building="LSC" data-occupied="true" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -277,94 +415,163 @@
       </div>
     </div>
 
-      <h4 class="text-center mt-4">Live Traffic Tracker</h4>
+    <h4 class="text-center mt-4 ev-section-title">
+      <i class="bi bi-activity"></i> Live Traffic Tracker
+    </h4>
 
-    <div style="display: flex; gap: 24px; margin-top: 16px; justify-content: center; flex-wrap: wrap;">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 16px;">
 
-      <div data-room="The Fit" style="
+
+      <div data-room="The Fit" class="ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 1020px;
-        background-color: lightcoral;
+        background-color: white;
         margin-top: 20px;
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <p style="margin: 0;"><strong>The Fit</strong></p>
-          <p style="margin: 0;"><strong>BUSY</strong></p>
-          <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+          <div style="display: flex; align-items: center; gap:10px;">
+            <i class="bi bi-heart-pulse fs-5"></i>
+            <p style="margin: 0;"><strong>The Fit</strong></p>
+          </div>
+            <p style="margin: 0;"><strong>BUSY</strong></p>
+            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+          </div>
         </div>
-      </div>
 
-      <div data-room="The Caf" style="
+      <div data-room="The Caf" class="ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 1020px;
-        background-color: yellow;
+        background-color: white;
         margin-top: 20px;
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <p style="margin: 0;"><strong>The Caf</strong></p>
-          <p style="margin: 0;"><strong>MODERATELY BUSY</strong></p>
-          <p style="margin: 0;">Last updated: <strong>5 Minutes Ago</strong></p>
+          <div style="display: flex; align-items: center; gap:10px;">
+            <i class="bi bi-cup-hot fs-5"></i>
+            <p style="margin: 0;"><strong>The Caf</strong></p>
+          </div>
+            <p style="margin: 0;"><strong>BUSY</strong></p>
+            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+          </div>
         </div>
-      </div>
 
-      <div data-room="Library" style="
+      <div data-room="Library" class="ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 1020px;
-        background-color: lightgreen;
+        background-color: white;
         margin-top: 20px;
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <p style="margin: 0;"><strong>Library</strong></p>
-          <p style="margin: 0;"><strong>NOT BUSY</strong></p>
-          <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+          <div style="display: flex; align-items: center; gap:10px;">
+            <i class="bi bi-book fs-5"></i>
+            <p style="margin: 0;"><strong>Library</strong></p>
+          </div>
+            <p style="margin: 0;"><strong>BUSY</strong></p>
+            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+          </div>
         </div>
+
+      <div class="map-card" style="margin-left:auto; margin-right:auto;">
+        <div class="map-head">
+          <span><i class="bi bi-map"></i> Campus Map</span>
+          <span style="color: rgba(0,0,0,0.6); font-weight: 700;">
+          </span>
+        </div>
+        <iframe
+          src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
+          width="100%"
+          height="800"
+          style="border: 0;"
+        ></iframe>
       </div>
 
-    <iframe
-      src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
-      width="100%"
-      height="800"
-      style="border: 1px solid black; border-radius: 12px;"
-    ></iframe>
+      <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
+        Built for fast decisions • Eagle Vision
+      </div>
 
   </div>
 
   </main>
 </div>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-  const roomSearch = document.getElementById("roomSearch");
-  const campusSelect = document.getElementById("campus");
+  <script>
+    const roomSearch = document.getElementById("roomSearch");
+    const campusSelect = document.getElementById("campus");
+    const resultsCount = document.getElementById("resultsCount");
 
-  function applyFilters() {
-    const query = roomSearch.value.toLowerCase().trim();
-    const selectedCampus = campusSelect.value;
+    // CHANGED: derive label from boolean, not background
+    function statusFromOccupiedBool(occupiedStr) {
+      return occupiedStr === "true" ? "OCCUPIED" : "VACANT";
+    }
 
-    document.querySelectorAll("[data-room]").forEach(card => {
-      const roomName = card.dataset.room.toLowerCase();
-      const building = card.dataset.building;
+    // CHANGED: inject badges based on data-occupied=true/false
+    function addStatusBadges() {
+      document.querySelectorAll(".room-card").forEach(card => {
+        if (card.querySelector(".ev-badge")) return;
 
-      const matchesSearch = roomName.includes(query);
-      const matchesCampus =
-        selectedCampus === "" || building === selectedCampus;
+        const occupiedStr = card.dataset.occupied; // "true" or "false"
+        const label = statusFromOccupiedBool(occupiedStr);
 
-      card.style.display = (matchesSearch && matchesCampus) ? "" : "none";
-    });
-  }
+        const topRow = card.querySelector("div");
+        if (!topRow) return;
 
-  roomSearch.addEventListener("input", applyFilters);
-  campusSelect.addEventListener("change", applyFilters);
-</script>
+        const badge = document.createElement("span");
+        badge.className = "ev-badge";
+        badge.textContent = label;
+
+        if (label === "VACANT") {
+          badge.style.color = "#117a3a";
+          badge.style.borderColor = "rgba(17,122,58,0.25)";
+          badge.style.background = "rgba(17,122,58,0.10)";
+        } else {
+          badge.style.color = "#b42318";
+          badge.style.borderColor = "rgba(180,35,24,0.25)";
+          badge.style.background = "rgba(180,35,24,0.10)";
+        }
+
+        topRow.appendChild(badge);
+      });
+    }
+
+    function applyFilters() {
+      const query = roomSearch.value.toLowerCase().trim();
+      const selectedCampus = campusSelect.value;
+
+      let visibleCount = 0;
+
+      document.querySelectorAll(".room-card").forEach(card => {
+        const roomName = (card.dataset.room || "").toLowerCase();
+        const building = card.dataset.building;
+
+        const matchesSearch = roomName.includes(query);
+        const matchesCampus = selectedCampus === "" || building === selectedCampus;
+
+        const show = (matchesSearch && matchesCampus);
+        card.style.display = show ? "" : "none";
+
+        if (show) visibleCount++;
+      });
+
+      resultsCount.innerHTML = `<i class="bi bi-grid-3x3-gap"></i> Results: ${visibleCount}`;
+    }
+
+    addStatusBadges();
+    applyFilters();
+
+    roomSearch.addEventListener("input", applyFilters);
+    campusSelect.addEventListener("change", applyFilters);
+  </script>
 
 
 </body>
