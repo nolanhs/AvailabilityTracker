@@ -125,6 +125,31 @@
             border-left: 8px solid #b42318 !important;
         }
 
+        /* Favorite/Pin button styles */
+        .fav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #ccc;
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 4px;
+        }
+
+        .fav-btn:hover {
+            color: #6366f1;
+            transform: scale(1.1);
+        }
+
+        .fav-btn.favorited {
+            color: #6366f1;
+        }
+
+        .room-card.is-favorite {
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25) !important;
+            border-top: 3px solid #6366f1 !important;
+        }
+
         /* Tab Navigation Styles */
         .ev-tab {
             padding: 10px 20px;
@@ -198,6 +223,7 @@
                 <label for="occupancyFilter">Occupancy:</label>
                 <select id="occupancyFilter" name="occupancyFilter">
                     <option value="">All</option>
+                    <option value="favorites">📌 Pinned</option>
                     <option value="vacant">Vacant (0)</option>
                     <option value="low">Low (1)</option>
                     <option value="medium">Medium (2-3)</option>
@@ -278,6 +304,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p style="margin:0;"><strong>AIEB 216</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -293,6 +321,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 205</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -308,6 +338,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 237</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -323,6 +355,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 238</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -338,6 +372,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 242</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -353,6 +389,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 261</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -368,6 +406,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 253</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -383,6 +423,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 241</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -398,6 +440,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>AIEB 376</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -413,6 +457,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>LIBR 223</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                             <a
                                 href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
                                     class="btn btn-primary btn-sm mt-2">Book</button></a>
@@ -431,6 +477,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>LIBR 224</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                             <a
                                 href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
                                     class="btn btn-primary btn-sm mt-2">Book</button></a>
@@ -449,6 +497,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>LIBR 225</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                             <a
                                 href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
                                     class="btn btn-primary btn-sm mt-2">Book</button></a>
@@ -466,6 +516,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>LSC 1</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -480,6 +532,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>LSC 2</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
 
@@ -494,6 +548,8 @@
         ">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p><strong>LSC 3</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
                         </div>
                     </div>
                 </div>
@@ -663,6 +719,74 @@
         const campusSelect = document.getElementById("campus");
         const resultsCount = document.getElementById("resultsCount");
 
+        // Favorites management (stored in localStorage)
+        function getFavorites() {
+            const favs = localStorage.getItem('roomFavorites');
+            return favs ? JSON.parse(favs) : [];
+        }
+
+        function saveFavorites(favorites) {
+            localStorage.setItem('roomFavorites', JSON.stringify(favorites));
+        }
+
+        function toggleFavorite(btn) {
+            const card = btn.closest('.room-card');
+            const roomName = card.dataset.room;
+            let favorites = getFavorites();
+
+            if (favorites.includes(roomName)) {
+                // Remove from favorites
+                favorites = favorites.filter(f => f !== roomName);
+                btn.classList.remove('favorited');
+                btn.querySelector('i').className = 'bi bi-pin-angle';
+                card.classList.remove('is-favorite');
+            } else {
+                // Pin to top
+                favorites.push(roomName);
+                btn.classList.add('favorited');
+                btn.querySelector('i').className = 'bi bi-pin-angle-fill';
+                card.classList.add('is-favorite');
+            }
+
+            saveFavorites(favorites);
+            reorderPinnedRooms();
+            applyFilters();
+        }
+
+        function initFavorites() {
+            const favorites = getFavorites();
+            document.querySelectorAll('.room-card').forEach(card => {
+                const roomName = card.dataset.room;
+                const btn = card.querySelector('.fav-btn');
+                if (btn && favorites.includes(roomName)) {
+                    btn.classList.add('favorited');
+                    btn.querySelector('i').className = 'bi bi-pin-angle-fill';
+                    card.classList.add('is-favorite');
+                }
+            });
+            reorderPinnedRooms();
+        }
+
+        function reorderPinnedRooms() {
+            const container = document.querySelector('#roomsTab > div > div');
+            if (!container) return;
+
+            const favorites = getFavorites();
+            const cards = Array.from(container.querySelectorAll('.room-card'));
+
+            // Sort: pinned first, then alphabetically
+            cards.sort((a, b) => {
+                const aFav = favorites.includes(a.dataset.room);
+                const bFav = favorites.includes(b.dataset.room);
+                if (aFav && !bFav) return -1;
+                if (!aFav && bFav) return 1;
+                return (a.dataset.room || '').localeCompare(b.dataset.room || '');
+            });
+
+            // Reorder in DOM
+            cards.forEach(card => container.appendChild(card));
+        }
+
         // Occupancy levels based on device count
         // 0: Vacant, 1: Low, 2-3: Medium, 4+: High
         function getOccupancyLevel(deviceCount) {
@@ -811,14 +935,18 @@
             const query = roomSearch.value.toLowerCase().trim();
             const selectedCampus = campusSelect.value;
             const selectedOccupancy = document.getElementById('occupancyFilter').value;
+            const favorites = getFavorites();
             let visibleCount = 0;
             document.querySelectorAll(".room-card").forEach(card => {
                 const roomName = (card.dataset.room || "").toLowerCase();
+                const roomNameFull = card.dataset.room || "";
                 const building = card.dataset.building;
                 const occupancy = card.dataset.occupancy || 'vacant';
+                const isFavorite = favorites.includes(roomNameFull);
                 const matchesSearch = roomName.includes(query);
                 const matchesCampus = selectedCampus === "" || building === selectedCampus;
-                const matchesOccupancy = selectedOccupancy === "" || occupancy === selectedOccupancy;
+                const matchesOccupancy = selectedOccupancy === "" ||
+                    (selectedOccupancy === "favorites" ? isFavorite : occupancy === selectedOccupancy);
                 const show = (matchesSearch && matchesCampus && matchesOccupancy);
                 card.style.display = show ? "" : "none";
                 if (show) visibleCount++;
@@ -828,6 +956,7 @@
 
         // Add badges on page load
         addStatusBadges();
+        initFavorites();
         applyFilters();
 
         // Initial load from API (optional - updates from MQTT will override)
