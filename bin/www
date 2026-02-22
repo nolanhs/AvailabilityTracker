@@ -7,6 +7,7 @@
 const app = require('../app');
 const debug = require('debug')('expressApp:server');
 const http = require('http');
+const socketIO = require('socket.io');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,28 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+
+/**
+ * Initialize Socket.io
+ */
+const io = socketIO(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+app.set('io', io);
+
+// Log Socket.io connections
+io.on('connection', (socket) => {
+  console.log('[Socket.io] Client connected:', socket.id);
+  console.log('[Socket.io] Total connected clients:', io.engine.clientsCount);
+
+  socket.on('disconnect', () => {
+    console.log('[Socket.io] Client disconnected:', socket.id);
+    console.log('[Socket.io] Total connected clients:', io.engine.clientsCount);
+  });
+});
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -87,4 +110,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log('[Server] HTTP server listening on', bind);
+  console.log('[Socket.io] Server ready - waiting for client connections');
 }
