@@ -124,6 +124,36 @@
         .room-card[data-occupancy="high"] {
             border-left: 8px solid #b42318 !important;
         }
+
+        /* Tab Navigation Styles */
+        .ev-tab {
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ev-tab:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .ev-tab.active {
+            background: #1a1a2e;
+            color: white;
+            border-color: #1a1a2e;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.85) !important;
+            border-radius: 16px !important;
+        }
     </style>
 
 </head>
@@ -207,10 +237,23 @@
             </div>
         </div>
 
-        <div style="max-width: 1100px; margin: 0 auto;">
-            <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
+        <!-- Tab Navigation -->
+        <div class="tab-nav" style="display: flex; gap: 8px; margin-top: 20px; justify-content: center;">
+            <button id="roomsTabBtn" class="ev-tab active" onclick="showTab('rooms')">
+                <i class="bi bi-grid-3x3-gap"></i> Rooms
+            </button>
+            <button id="trendsTabBtn" class="ev-tab" onclick="showTab('trends')">
+                <i class="bi bi-graph-up"></i> Trends
+            </button>
+        </div>
 
-                <div data-room="AIEB 216" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+        <!-- Rooms Tab -->
+        <div id="roomsTab" class="tab-content">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
+
+                    <div data-room="AIEB 216" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -219,12 +262,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p style="margin:0;"><strong>AIEB 216</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin:0;"><strong>AIEB 216</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 205" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 205" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -233,12 +277,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 205</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 205</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 237" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 237" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -247,12 +292,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 237</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 237</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 238" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 238" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -261,12 +307,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 238</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 238</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 242" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 242" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -275,12 +322,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 242</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 242</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 261" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 261" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -289,12 +337,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 261</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 261</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 253" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 253" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -303,12 +352,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 253</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 253</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 241" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 241" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -317,12 +367,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 241</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 241</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="AIEB 376" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="AIEB 376" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -331,12 +382,13 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>AIEB 376</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>AIEB 376</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="LIBR 223" data-building="Library" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="LIBR 223" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -345,15 +397,16 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>LIBR 223</strong></p>
-                        <a
-                            href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
-                                class="btn btn-primary btn-sm mt-2">Book</button></a>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>LIBR 223</strong></p>
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
+                                    class="btn btn-primary btn-sm mt-2">Book</button></a>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="LIBR 224" data-building="Library" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="LIBR 224" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -362,15 +415,16 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>LIBR 224</strong></p>
-                        <a
-                            href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
-                                class="btn btn-primary btn-sm mt-2">Book</button></a>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>LIBR 224</strong></p>
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
+                                    class="btn btn-primary btn-sm mt-2">Book</button></a>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="LIBR 225" data-building="Library" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="LIBR 225" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -379,15 +433,15 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>LIBR 225</strong></p>
-                        <a
-                            href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
-                                class="btn btn-primary btn-sm mt-2">Book</button></a>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>LIBR 225</strong></p>
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
+                                    class="btn btn-primary btn-sm mt-2">Book</button></a>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="LSC 1" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="LSC 1" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -396,12 +450,12 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>LSC 1</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>LSC 1</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="LSC 2" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="LSC 2" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -410,12 +464,12 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>LSC 2</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>LSC 2</strong></p>
+                        </div>
                     </div>
-                </div>
 
-                <div data-room="LSC 3" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+                    <div data-room="LSC 3" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
@@ -424,98 +478,171 @@
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <p><strong>LSC 3</strong></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p><strong>LSC 3</strong></p>
+                        </div>
                     </div>
+                </div>
+
+                <h4 class="text-center mt-4 ev-section-title">
+                    <i class="bi bi-activity"></i> Live Traffic Tracker
+                </h4>
+
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 16px;">
+
+
+                    <div data-room="The Fit" class="ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: white;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap:10px;">
+                                <i class="bi bi-heart-pulse fs-5"></i>
+                                <p style="margin: 0;"><strong>The Fit</strong></p>
+                            </div>
+                            <p style="margin: 0;"><strong>BUSY</strong></p>
+                            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                        </div>
+                    </div>
+
+                    <div data-room="The Caf" class="ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: white;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap:10px;">
+                                <i class="bi bi-cup-hot fs-5"></i>
+                                <p style="margin: 0;"><strong>The Caf</strong></p>
+                            </div>
+                            <p style="margin: 0;"><strong>BUSY</strong></p>
+                            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                        </div>
+                    </div>
+
+                    <div data-room="Library" class="ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: white;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap:10px;">
+                                <i class="bi bi-book fs-5"></i>
+                                <p style="margin: 0;"><strong>Library</strong></p>
+                            </div>
+                            <p style="margin: 0;"><strong>BUSY</strong></p>
+                            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="map-card" style="margin-left:auto; margin-right:auto;">
+                        <div class="map-head">
+                            <span><i class="bi bi-map"></i> Campus Map</span>
+                            <span style="color: rgba(0,0,0,0.6); font-weight: 700;">
+                            </span>
+                        </div>
+                        <iframe
+                            src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
+                            width="100%" height="800" style="border: 0;"></iframe>
+                    </div>
+
+                    <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
+                        Built for fast decisions • Eagle Vision
+                    </div>
+
                 </div>
             </div>
+        </div> <!-- End Rooms Tab -->
 
-            <h4 class="text-center mt-4 ev-section-title">
-                <i class="bi bi-activity"></i> Live Traffic Tracker
-            </h4>
+        <!-- Trends Tab -->
+        <div id="trendsTab" class="tab-content" style="display: none;">
+            <div style="max-width: 1100px; margin: 24px auto; padding: 0 16px;">
 
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 16px;">
-
-
-                <div data-room="The Fit" class="ev-card" style="
-        border: 1px solid black;
-        border-radius: 14px;
-        width: 1020px;
-        background-color: white;
-        margin-top: 20px;
-        padding: 18px;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
-        ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap:10px;">
-                            <i class="bi bi-heart-pulse fs-5"></i>
-                            <p style="margin: 0;"><strong>The Fit</strong></p>
-                        </div>
-                        <p style="margin: 0;"><strong>BUSY</strong></p>
-                        <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                <!-- Overview Stats -->
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;">
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #117a3a;" id="statVacantRooms">--</div>
+                        <div style="color: #666; font-weight: 600;">Vacant Rooms</div>
+                    </div>
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #b42318;" id="statOccupiedRooms">--</div>
+                        <div style="color: #666; font-weight: 600;">Occupied Rooms</div>
+                    </div>
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #0891b2;" id="statAvgOccupancy">--</div>
+                        <div style="color: #666; font-weight: 600;">Avg Devices/Room</div>
                     </div>
                 </div>
 
-                <div data-room="The Caf" class="ev-card" style="
-        border: 1px solid black;
-        border-radius: 14px;
-        width: 1020px;
-        background-color: white;
-        margin-top: 20px;
-        padding: 18px;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
-        ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap:10px;">
-                            <i class="bi bi-cup-hot fs-5"></i>
-                            <p style="margin: 0;"><strong>The Caf</strong></p>
-                        </div>
-                        <p style="margin: 0;"><strong>BUSY</strong></p>
-                        <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                <!-- Occupancy by Building Chart -->
+                <div class="ev-card" style="padding: 24px; margin-bottom: 24px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                        <h5 style="margin: 0; font-weight: 700;">
+                            <i class="bi bi-bar-chart"></i> Occupancy by Building
+                        </h5>
+                        <select id="buildingChartSelect"
+                            style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                            <option value="all">All Buildings</option>
+                        </select>
+                    </div>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="buildingChart"></canvas>
                     </div>
                 </div>
 
-                <div data-room="Library" class="ev-card" style="
-        border: 1px solid black;
-        border-radius: 14px;
-        width: 1020px;
-        background-color: white;
-        margin-top: 20px;
-        padding: 18px;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
-        ">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap:10px;">
-                            <i class="bi bi-book fs-5"></i>
-                            <p style="margin: 0;"><strong>Library</strong></p>
+                <!-- Room Status Distribution -->
+                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                    <div class="ev-card" style="padding: 24px; flex: 1; min-width: 300px;">
+                        <h5 style="margin-bottom: 16px; font-weight: 700;">
+                            <i class="bi bi-pie-chart"></i> Room Status Distribution
+                        </h5>
+                        <div style="height: 200px; position: relative;">
+                            <canvas id="statusChart"></canvas>
                         </div>
-                        <p style="margin: 0;"><strong>BUSY</strong></p>
-                        <p style="margin: 0;">Last updated: <strong>Now</strong></p>
                     </div>
-                </div>
-
-                <div class="map-card" style="margin-left:auto; margin-right:auto;">
-                    <div class="map-head">
-                        <span><i class="bi bi-map"></i> Campus Map</span>
-                        <span style="color: rgba(0,0,0,0.6); font-weight: 700;">
-                        </span>
+                    <div class="ev-card" style="padding: 24px; flex: 1; min-width: 300px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                            <h5 style="margin: 0; font-weight: 700;">
+                                <i class="bi bi-clock-history"></i> Peak Hours (Last 7 Days)
+                            </h5>
+                            <select id="peakHoursRoomSelect"
+                                style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                                <option value="all">All Rooms</option>
+                            </select>
+                        </div>
+                        <div style="height: 200px; position: relative;">
+                            <canvas id="peakHoursChart"></canvas>
+                        </div>
                     </div>
-                    <iframe
-                        src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
-                        width="100%" height="800" style="border: 0;"></iframe>
                 </div>
 
                 <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
-                    Built for fast decisions • Eagle Vision
+                    Data updates in real-time • Eagle Vision Analytics
                 </div>
-
             </div>
+        </div> <!-- End Trends Tab -->
 
     </main>
     </div>
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const roomSearch = document.getElementById("roomSearch");
@@ -738,6 +865,270 @@
 
         roomSearch.addEventListener("input", applyFilters);
         campusSelect.addEventListener("change", applyFilters);
+
+        // Tab Switching
+        function showTab(tabName) {
+            const roomsTab = document.getElementById('roomsTab');
+            const trendsTab = document.getElementById('trendsTab');
+            const roomsBtn = document.getElementById('roomsTabBtn');
+            const trendsBtn = document.getElementById('trendsTabBtn');
+
+            if (tabName === 'rooms') {
+                roomsTab.style.display = 'block';
+                trendsTab.style.display = 'none';
+                roomsBtn.classList.add('active');
+                trendsBtn.classList.remove('active');
+            } else {
+                roomsTab.style.display = 'none';
+                trendsTab.style.display = 'block';
+                roomsBtn.classList.remove('active');
+                trendsBtn.classList.add('active');
+                updateTrendsData();
+            }
+        }
+
+        // Make showTab available globally
+        window.showTab = showTab;
+
+        // Chart instances
+        let buildingChart = null;
+        let statusChart = null;
+        let peakHoursChart = null;
+
+        async function updateTrendsData() {
+            // Calculate stats from room cards (real-time from current state)
+            const cards = document.querySelectorAll('.room-card');
+            let vacant = 0, low = 0, medium = 0, high = 0;
+            let totalDevices = 0;
+
+            cards.forEach(card => {
+                const level = card.dataset.occupancy || 'vacant';
+                const deviceCount = parseInt(card.dataset.deviceCount) || 0;
+                totalDevices += deviceCount;
+
+                switch (level) {
+                    case 'vacant': vacant++; break;
+                    case 'low': low++; break;
+                    case 'medium': medium++; break;
+                    case 'high': high++; break;
+                }
+            });
+
+            // Update stats
+            document.getElementById('statVacantRooms').textContent = vacant;
+            document.getElementById('statOccupiedRooms').textContent = cards.length - vacant;
+            document.getElementById('statAvgOccupancy').textContent =
+                cards.length > 0 ? (totalDevices / cards.length).toFixed(1) : '0';
+
+            // Populate dropdowns and update charts
+            await populateBuildingDropdown();
+            await updateBuildingChart('all');
+
+            // Status Distribution Chart (from real-time DOM data)
+            if (statusChart) statusChart.destroy();
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Vacant (0)', 'Low (1)', 'Medium (2-3)', 'High (4+)'],
+                    datasets: [{
+                        data: [vacant, low, medium, high],
+                        backgroundColor: ['#117a3a', '#0891b2', '#d97706', '#b42318'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
+            });
+
+            // Populate room dropdown
+            await populateRoomDropdown();
+
+            // Peak Hours Chart from API
+            await updatePeakHoursChart('all');
+        }
+
+        // Populate building dropdown
+        async function populateBuildingDropdown() {
+            const select = document.getElementById('buildingChartSelect');
+            // Only populate once
+            if (select.options.length > 1) return;
+
+            try {
+                const res = await fetch('/api/buildings/list');
+                const buildings = await res.json();
+                buildings.filter(b => b.buildingCode !== 'ENG').forEach(b => {
+                    const option = document.createElement('option');
+                    option.value = b.buildingCode;
+                    option.textContent = b.buildingCode + ' - ' + b.buildingName;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Error fetching buildings:', err);
+            }
+        }
+
+        // Update building chart (all buildings or specific building rooms)
+        async function updateBuildingChart(buildingCode) {
+            try {
+                const url = buildingCode === 'all'
+                    ? '/api/analytics/by-building'
+                    : `/api/analytics/by-building?buildingCode=${buildingCode}`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (buildingChart) buildingChart.destroy();
+                const buildingCtx = document.getElementById('buildingChart').getContext('2d');
+
+                if (buildingCode === 'all') {
+                    // Show all buildings summary (exclude ENG for now)
+                    const filteredData = data.filter(b => b.buildingCode !== 'ENG');
+                    const labels = filteredData.map(b => b.buildingCode || 'Unknown');
+                    const occupied = filteredData.map(b => Number(b.occupiedRooms) || 0);
+                    const vacant = filteredData.map(b => (Number(b.totalRooms) || 0) - (Number(b.occupiedRooms) || 0));
+
+                    buildingChart = new Chart(buildingCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                { label: 'Occupied', data: occupied, backgroundColor: '#b42318', borderRadius: 8 },
+                                { label: 'Vacant', data: vacant, backgroundColor: '#117a3a', borderRadius: 8 }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: 'top' } },
+                            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                        }
+                    });
+                } else {
+                    // Show individual rooms in selected building
+                    const labels = data.map(r => r.fullName || r.roomName);
+                    // Use constant height of 1, color indicates status
+                    const barValues = data.map(() => 1);
+                    const barColors = data.map(r => r.isOccupied ? '#b42318' : '#117a3a');
+                    const statusLabels = data.map(r => r.isOccupied ? 'Occupied' : 'Vacant');
+
+                    buildingChart = new Chart(buildingCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Room Status',
+                                data: barValues,
+                                backgroundColor: barColors,
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return statusLabels[context.dataIndex];
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    display: false,
+                                    beginAtZero: true,
+                                    max: 1
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Error fetching building data:', err);
+            }
+        }
+
+        // Building dropdown change handler
+        document.getElementById('buildingChartSelect').addEventListener('change', (e) => {
+            updateBuildingChart(e.target.value);
+        });
+
+        // Populate room dropdown for peak hours filter
+        async function populateRoomDropdown() {
+            const select = document.getElementById('peakHoursRoomSelect');
+            // Only populate once
+            if (select.options.length > 1) return;
+
+            try {
+                const res = await fetch('/api/rooms/list');
+                const rooms = await res.json();
+                rooms.forEach(room => {
+                    const option = document.createElement('option');
+                    option.value = room.roomID;
+                    option.textContent = room.fullName;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Error fetching rooms:', err);
+            }
+        }
+
+        // Update peak hours chart for specific room
+        async function updatePeakHoursChart(roomID) {
+            try {
+                const url = roomID === 'all'
+                    ? '/api/analytics/peak-hours'
+                    : `/api/analytics/peak-hours?roomID=${roomID}`;
+                const peakRes = await fetch(url);
+                const peakData = await peakRes.json();
+
+                // Create full 24-hour chart with API data
+                const hourLabels = [];
+                const hourData = [];
+                for (let h = 6; h <= 22; h++) {
+                    const label = h < 12 ? `${h}AM` : h === 12 ? '12PM' : `${h - 12}PM`;
+                    hourLabels.push(label);
+                    const found = peakData.find(p => p.hour === h);
+                    // Show average device count per hour
+                    hourData.push(found ? Number(found.avg_devices) || 0 : 0);
+                }
+
+                if (peakHoursChart) peakHoursChart.destroy();
+                const peakCtx = document.getElementById('peakHoursChart').getContext('2d');
+                peakHoursChart = new Chart(peakCtx, {
+                    type: 'line',
+                    data: {
+                        labels: hourLabels,
+                        datasets: [{
+                            label: 'Avg Devices',
+                            data: hourData,
+                            borderColor: '#0891b2',
+                            backgroundColor: 'rgba(8, 145, 178, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            } catch (err) {
+                console.error('Error fetching peak hours:', err);
+            }
+        }
+
+        // Room dropdown change handler
+        document.getElementById('peakHoursRoomSelect').addEventListener('change', (e) => {
+            updatePeakHoursChart(e.target.value);
+        });
     </script>
 
 

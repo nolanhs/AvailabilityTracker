@@ -115,7 +115,13 @@ mqttClient.on('message', (topic, message) => {
 
         if (rooms.length > 0) {
           const dbRoomID = rooms[0].dbRoomID;
+
           await db.query(`INSERT INTO tblroomstatus (roomID, isOccupied) VALUES (?, ?) ON DUPLICATE KEY UPDATE isOccupied = VALUES(isOccupied)`, [dbRoomID, isOccupied]);
+
+          // Log every scan with device count for averaging
+          const cause = deviceCount > 0 ? `${deviceCount} device(s) detected` : 'no devices detected';
+          await db.query(`INSERT INTO tblroomhistory (roomID, isOccupied, deviceCount, Cause) VALUES (?, ?, ?, ?)`, [dbRoomID, isOccupied, deviceCount, cause]);
+
           console.log('[DB] Success! Room', fullName, '(dbID:', dbRoomID, ') updated. Device count:', deviceCount, 'isOccupied:', isOccupied);
         } else {
           // Room not found, create it if building exists
@@ -187,6 +193,143 @@ app.get('/api/rooms/status', async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error('[API] Error fetching room status:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Analytics: Peak hours - average occupancy (device count) by hour over last 7 days
+app.get('/api/analytics/peak-hours', async (req, res) => {
+  try {
+    const roomID = req.query.roomID;
+    let query, params;
+
+    if (roomID && roomID !== 'all') {
+      query = `
+        SELECT 
+          HOUR(startedAt) as hour,
+          COUNT(*) as total_scans,
+          ROUND(AVG(deviceCount), 1) as avg_devices
+        FROM tblroomhistory 
+        WHERE startedAt >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+          AND roomID = ?
+        GROUP BY HOUR(startedAt)
+        ORDER BY hour
+      `;
+      params = [roomID];
+    } else {
+      query = `
+        SELECT 
+          HOUR(startedAt) as hour,
+          COUNT(*) as total_scans,
+          ROUND(AVG(deviceCount), 1) as avg_devices
+        FROM tblroomhistory 
+        WHERE startedAt >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        GROUP BY HOUR(startedAt)
+        ORDER BY hour
+      `;
+      params = [];
+    }
+
+    const [rows] = await db.query(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error('[API] Error fetching peak hours:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get list of rooms for dropdown
+app.get('/api/rooms/list', async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT r.roomID, r.roomName, b.buildingCode,
+             CONCAT(b.buildingCode, ' ', r.roomName) AS fullName
+      FROM tblstudyrooms r
+      LEFT JOIN tblbuildings b ON r.buildingID = b.buildingID
+      ORDER BY b.buildingCode, r.roomName
+    `);
+    res.json(rows);
+  } catch (err) {
+    console.error('[API] Error fetching rooms list:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get list of buildings for dropdown
+app.get('/api/buildings/list', async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT MIN(b.buildingID) as buildingID, b.buildingCode, MIN(b.buildingName) as buildingName
+      FROM tblbuildings b
+      WHERE b.buildingCode IS NOT NULL
+      GROUP BY b.buildingCode
+      ORDER BY b.buildingCode
+    `);
+    res.json(rows);
+  } catch (err) {
+    console.error('[API] Error fetching buildings list:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Analytics: Occupancy by building (optional buildingCode filter)
+app.get('/api/analytics/by-building', async (req, res) => {
+  try {
+    const buildingCode = req.query.buildingCode;
+    let query, params;
+
+    if (buildingCode && buildingCode !== 'all') {
+      query = `
+        SELECT 
+          b.buildingCode,
+          r.roomID, r.roomName,
+          CONCAT(b.buildingCode, ' ', r.roomName) AS fullName,
+          IFNULL(s.isOccupied, 0) as isOccupied
+        FROM tblstudyrooms r
+        LEFT JOIN tblbuildings b ON r.buildingID = b.buildingID
+        LEFT JOIN tblroomstatus s ON r.roomID = s.roomID
+        WHERE b.buildingCode = ?
+        ORDER BY r.roomName
+      `;
+      params = [buildingCode];
+    } else {
+      query = `
+        SELECT 
+          b.buildingCode,
+          COUNT(DISTINCT r.roomID) as totalRooms,
+          SUM(CASE WHEN s.isOccupied = 1 THEN 1 ELSE 0 END) as occupiedRooms
+        FROM tblstudyrooms r
+        LEFT JOIN tblbuildings b ON r.buildingID = b.buildingID
+        LEFT JOIN tblroomstatus s ON r.roomID = s.roomID
+        GROUP BY b.buildingCode
+      `;
+      params = [];
+    }
+
+    const [rows] = await db.query(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error('[API] Error fetching by-building stats:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Analytics: Recent history
+app.get('/api/analytics/history', async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT 
+        h.historyID, h.roomID, h.isOccupied, h.startedAt, h.Cause,
+        CONCAT(b.buildingCode, ' ', r.roomName) AS fullName
+      FROM tblroomhistory h
+      JOIN tblstudyrooms r ON h.roomID = r.roomID
+      JOIN tblbuildings b ON r.buildingID = b.buildingID
+      ORDER BY h.startedAt DESC
+      LIMIT 50
+    `);
+    res.json(rows);
+  } catch (err) {
+    console.error('[API] Error fetching history:', err);
     res.status(500).json({ error: err.message });
   }
 });
