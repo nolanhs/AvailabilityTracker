@@ -184,18 +184,31 @@
 
         <input type="text" class="form-control" placeholder="Search Rooms... (ex: 216, AIEB, LIBR)" id="roomSearch" />
 
-        <div class="mt-4">
-            <label for="campus">Location:</label>
-            <select id="campus" name="campus">
-                <option value="">All</option>
-                <option value="AIEB">AIEB</option>
-                <option value="Library">Library</option>
-                <option value="LSC">LSC</option>
-            </select>
+        <div class="mt-4" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div>
+                <label for="campus">Location:</label>
+                <select id="campus" name="campus">
+                    <option value="">All</option>
+                    <option value="AIEB">AIEB</option>
+                    <option value="Library">Library</option>
+                    <option value="LSC">LSC</option>
+                </select>
+            </div>
+            <div>
+                <label for="occupancyFilter">Occupancy:</label>
+                <select id="occupancyFilter" name="occupancyFilter">
+                    <option value="">All</option>
+                    <option value="vacant">Vacant (0)</option>
+                    <option value="low">Low (1)</option>
+                    <option value="medium">Medium (2-3)</option>
+                    <option value="high">High (4+)</option>
+                </select>
+            </div>
         </div>
 
         <style>
-            #campus {
+            #campus,
+            #occupancyFilter {
                 padding: 8px 14px;
                 border-radius: 12px;
                 /* Rounded corners */
@@ -206,7 +219,8 @@
                 transition: 0.2s ease;
             }
 
-            #campus:focus {
+            #campus:focus,
+            #occupancyFilter:focus {
                 border-color: black;
             }
         </style>
@@ -796,13 +810,16 @@
         function applyFilters() {
             const query = roomSearch.value.toLowerCase().trim();
             const selectedCampus = campusSelect.value;
+            const selectedOccupancy = document.getElementById('occupancyFilter').value;
             let visibleCount = 0;
             document.querySelectorAll(".room-card").forEach(card => {
                 const roomName = (card.dataset.room || "").toLowerCase();
                 const building = card.dataset.building;
+                const occupancy = card.dataset.occupancy || 'vacant';
                 const matchesSearch = roomName.includes(query);
                 const matchesCampus = selectedCampus === "" || building === selectedCampus;
-                const show = (matchesSearch && matchesCampus);
+                const matchesOccupancy = selectedOccupancy === "" || occupancy === selectedOccupancy;
+                const show = (matchesSearch && matchesCampus && matchesOccupancy);
                 card.style.display = show ? "" : "none";
                 if (show) visibleCount++;
             });
@@ -865,6 +882,7 @@
 
         roomSearch.addEventListener("input", applyFilters);
         campusSelect.addEventListener("change", applyFilters);
+        document.getElementById('occupancyFilter').addEventListener("change", applyFilters);
 
         // Tab Switching
         function showTab(tabName) {
