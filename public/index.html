@@ -223,6 +223,17 @@
             border-left: 8px solid #b42318 !important;
         }
 
+        /* Room card header layout */
+        .room-card>div:first-child {
+            display: flex;
+            align-items: center;
+        }
+
+        .room-card>div:first-child>p {
+            flex: 0 0 100px;
+            margin: 0;
+        }
+
         /* Favorite/Pin button styles */
         .fav-btn {
             background: none;
@@ -232,6 +243,12 @@
             color: #ccc;
             transition: color 0.2s ease, transform 0.2s ease;
             padding: 4px;
+            flex: 0 0 32px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .fav-btn:hover {
