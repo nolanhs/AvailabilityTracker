@@ -2,491 +2,1458 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
-  <title>Eagle Vision</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
-  <style>
-    .ev-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.55);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    }
+    <title>Eagle Vision</title>
 
-    .ev-pill {
-      border: 1px solid rgba(0, 0, 0, 0.10);
-      background: rgba(255, 255, 255, 0.65);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      font-weight: 600;
-    }
+    <style>
+        /* Dark mode styles */
+        :root {
+            --bg-gradient-start: #f3e7c9;
+            --bg-gradient-end: #e6d9f2;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(0, 0, 0, 0.12);
+            --text-color: #1a1a2e;
+            --text-muted: #666;
+            --nav-bg: rgba(255, 255, 255, 0.55);
+            --control-bg: rgba(255, 255, 255, 0.70);
+            --badge-bg: rgba(255, 255, 255, 0.65);
+            --input-bg: #fff;
+            --input-border: #ccc;
+        }
 
-    .ev-control {
-      border-radius: 999px !important;
-      border: 1px solid rgba(0, 0, 0, 0.12) !important;
-      background: rgba(255, 255, 255, 0.70) !important;
-      backdrop-filter: blur(8px);
-      padding: 8px 14px !important;
-      font-weight: 600;
-    }
+        [data-theme="dark"] {
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+            --card-bg: rgba(30, 30, 50, 0.85);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-color: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --nav-bg: rgba(26, 26, 46, 0.85);
+            --control-bg: rgba(30, 30, 50, 0.85);
+            --badge-bg: rgba(30, 30, 50, 0.75);
+            --input-bg: #2a2a4a;
+            --input-border: #444;
+        }
 
-    .ev-card {
-      border: 1px solid rgba(0, 0, 0, 0.12) !important;
-      border-radius: 16px !important;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
+        body {
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
 
-    .ev-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12) !important;
-    }
+        [data-theme="dark"] .form-control {
+            background-color: var(--input-bg) !important;
+            border-color: var(--input-border) !important;
+            color: var(--text-color) !important;
+        }
 
-    .ev-badge {
-      font-size: 0.82rem;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0, 0, 0, 0.12);
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      background: rgba(255, 255, 255, 0.65);
-    }
+        [data-theme="dark"] .form-control::placeholder {
+            color: var(--text-muted) !important;
+        }
 
-    .ev-legend {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
+        [data-theme="dark"] #campus,
+        [data-theme="dark"] #occupancyFilter,
+        [data-theme="dark"] #buildingSelect,
+        [data-theme="dark"] #roomSelect {
+            background-color: var(--input-bg) !important;
+            border-color: var(--input-border) !important;
+            color: var(--text-color) !important;
+        }
 
-    .ev-section-title {
-      font-weight: 800;
-      letter-spacing: -0.2px;
-    }
+        [data-theme="dark"] label {
+            color: var(--text-color) !important;
+        }
 
-    .map-card {
-      margin-top: 22px;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.12);
-      background: rgba(255, 255, 255, 0.72);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      width: 100%;
-      max-width: 1100px;
-    }
+        .dark-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            background: var(--control-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            color: var(--text-color);
+        }
 
-    .map-head {
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      font-weight: 800;
-    }
+        .dark-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
 
-    .room-card {
-      background: rgba(255, 255, 255, 0.75) !important;
-    }
+        [data-theme="dark"] .dark-toggle {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
 
-    .room-card[data-occupied="true"] {
-      border-left: 8px solid #b42318 !important;
-    }
+        .ev-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
 
-    .room-card[data-occupied="false"] {
-      border-left: 8px solid #117a3a !important;
-    }
+        .ev-pill {
+            border: 1px solid var(--card-border);
+            background: var(--badge-bg);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-color);
+        }
 
-    #campus {
-      padding: 8px 14px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      outline: none;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
+        /* controls */
+        .ev-control {
+            border-radius: 999px !important;
+            border: 1px solid var(--card-border) !important;
+            background: var(--control-bg) !important;
+            backdrop-filter: blur(8px);
+            padding: 8px 14px !important;
+            font-weight: 600;
+            color: var(--text-color);
+        }
 
-    #campus:focus {
-      border-color: black;
-    }
-  </style>
+        /* your cards, but cooler */
+        .ev-card {
+            border: 1px solid var(--card-border) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            background: var(--card-bg) !important;
+            color: var(--text-color);
+        }
+
+        .ev-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        [data-theme="dark"] .ev-card {
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        [data-theme="dark"] .ev-card:hover {
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .ev-badge {
+            font-size: 0.82rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--card-border);
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            background: var(--badge-bg);
+        }
+
+        .ev-legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .ev-section-title {
+            font-weight: 800;
+            letter-spacing: -0.2px;
+        }
+
+        .map-card {
+            margin-top: 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .map-head {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            font-weight: 800;
+        }
+
+        /* ADDED: white cards + occupancy level accent */
+        .room-card {
+            background: rgba(255, 255, 255, 0.75) !important;
+            transition: border-left-color 0.3s ease;
+        }
+
+        /* Vacant: 0 devices - Green */
+        .room-card[data-occupancy="vacant"] {
+            border-left: 8px solid #117a3a !important;
+        }
+
+        /* Low: 1 device - Light Blue/Teal */
+        .room-card[data-occupancy="low"] {
+            border-left: 8px solid #0891b2 !important;
+        }
+
+        /* Medium: 2-3 devices - Orange/Yellow */
+        .room-card[data-occupancy="medium"] {
+            border-left: 8px solid #d97706 !important;
+        }
+
+        /* High: 4+ devices - Red */
+        .room-card[data-occupancy="high"] {
+            border-left: 8px solid #b42318 !important;
+        }
+
+        /* Room card header layout */
+        .room-card>div:first-child {
+            display: flex;
+            align-items: center;
+        }
+
+        .room-card>div:first-child>p {
+            flex: 0 0 100px;
+            margin: 0;
+        }
+
+        /* Favorite/Pin button styles */
+        .fav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #ccc;
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 4px;
+            flex: 0 0 32px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fav-btn:hover {
+            color: #6366f1;
+            transform: scale(1.1);
+        }
+
+        .fav-btn.favorited {
+            color: #6366f1;
+        }
+
+        .room-card.is-favorite {
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25) !important;
+            border-top: 3px solid #6366f1 !important;
+        }
+
+        /* Tab Navigation Styles */
+        .ev-tab {
+            padding: 10px 20px;
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            background: var(--badge-bg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-color);
+        }
+
+        .ev-tab:hover {
+            background: var(--control-bg);
+            border-color: var(--card-border);
+        }
+
+        .ev-tab.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        [data-theme="dark"] .ev-tab:not(.active) {
+            background: rgba(40, 40, 70, 0.75);
+        }
+
+        .stat-card {
+            background: var(--card-bg) !important;
+            border-radius: 16px !important;
+            color: var(--text-color);
+        }
+
+        /* ADDED: white cards + occupancy level accent for dark mode */
+        .room-card {
+            background: var(--card-bg) !important;
+        }
+
+        [data-theme="dark"] .fav-btn {
+            color: #888;
+        }
+
+        [data-theme="dark"] .fav-btn:hover,
+        [data-theme="dark"] .fav-btn.favorited {
+            color: #818cf8;
+        }
+    </style>
+
 </head>
 
 <body style="
   min-height: 100vh;
-  background: linear-gradient(#f3e7c9 0%, #f3e7c9 25%, #e6d9f2 100%);
+  background: linear-gradient(var(--bg-gradient-start) 0%, var(--bg-gradient-start) 25%, var(--bg-gradient-end) 100%);
   background-attachment: fixed;
   background-repeat: no-repeat;
 ">
 
-  <!-- Header -->
-  <div class="container d-flex flex justify-content-center align-items-center">
-    <a class="navbar-brand text-white" href="#">
-      <img src="logo.svg" alt="EagleVision Logo" class="img-fluid" style="max-height: 200px;" />
-    </a>
-  </div>
+    <!-- Dark Mode Toggle (Fixed Bottom-Right) -->
+    <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+        <i class="bi bi-moon-fill" id="darkModeIcon"></i>
+    </button>
 
-  <div class="my-0"></div>
+    <!-- Header / Navbar -->
+    <div class="container d-flex justify-content-center align-items-center">
 
-  <!-- Main Content -->
-  <main class="container py-0">
-    <label for="roomSearch" class="form-label visually-hidden">Search Rooms</label>
-    <input type="text" class="form-control" placeholder="Search Rooms... (ex: 216, AIEB, LIBR)" id="roomSearch" />
+        <!-- Logo -->
+        <a class="navbar-brand text-white" href="#">
+            <img src="logo2.png" alt="EagleVision Logo" class="img-fluid" style="max-height: 200px;" />
+        </a>
 
-    <div class="mt-4">
-      <label for="campus">Location:</label>
-      <select id="campus" name="campus">
-        <option value="">All</option>
-        <option value="AIEB">AIEB</option>
-        <option value="Library">Library</option>
-        <option value="LSC">LSC</option>
-      </select>
+    </div>
+    <div class="my-0"></div>
+    <!-- Main Content -->
+    <main class="container py-0">
+
+        <label for="roomSearch" class="form-label visually-hidden">
+            Search Rooms
+        </label>
+
+        <input type="text" class="form-control" placeholder="Search Rooms... (ex: 216, AIEB, LIBR)" id="roomSearch" />
+
+        <div class="mt-4" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div>
+                <label for="campus">Location:</label>
+                <select id="campus" name="campus">
+                    <option value="">All</option>
+                    <option value="AIEB">AIEB</option>
+                    <option value="Library">Library</option>
+                    <option value="LSC">LSC</option>
+                </select>
+            </div>
+            <div>
+                <label for="occupancyFilter">Occupancy:</label>
+                <select id="occupancyFilter" name="occupancyFilter">
+                    <option value="">All</option>
+                    <option value="favorites">📌 Pinned</option>
+                    <option value="vacant">Vacant (0)</option>
+                    <option value="low">Low (1)</option>
+                    <option value="medium">Medium (2-3)</option>
+                    <option value="high">High (4+)</option>
+                </select>
+            </div>
+        </div>
+
+        <style>
+            #campus,
+            #occupancyFilter {
+                padding: 8px 14px;
+                border-radius: 12px;
+                /* Rounded corners */
+                border: 1px solid #ccc;
+                outline: none;
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.2s ease;
+            }
+
+            #campus:focus,
+            #occupancyFilter:focus {
+                border-color: black;
+            }
+        </style>
+
+        <div class="mt-3"
+            style="display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
+            <div id="resultsCount" class="ev-pill">
+                <i class="bi bi-grid-3x3-gap"></i> Results: 0
+            </div>
+
+            <div class="ev-legend">
+                <span class="ev-badge"
+                    style="color:#117a3a; border-color: rgba(17,122,58,0.25); background: rgba(17,122,58,0.10);">
+                    <i class="bi bi-check-circle"></i> Vacant (0)
+                </span>
+                <span class="ev-badge"
+                    style="color:#0891b2; border-color: rgba(8,145,178,0.25); background: rgba(8,145,178,0.10);">
+                    <i class="bi bi-person"></i> Low (1)
+                </span>
+                <span class="ev-badge"
+                    style="color:#d97706; border-color: rgba(217,119,6,0.25); background: rgba(217,119,6,0.10);">
+                    <i class="bi bi-people"></i> Medium (2-3)
+                </span>
+                <span class="ev-badge"
+                    style="color:#b42318; border-color: rgba(180,35,24,0.25); background: rgba(180,35,24,0.10);">
+                    <i class="bi bi-people-fill"></i> High (4+)
+                </span>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav" style="display: flex; gap: 8px; margin-top: 20px; justify-content: center;">
+            <button id="roomsTabBtn" class="ev-tab active" onclick="showTab('rooms')">
+                <i class="bi bi-grid-3x3-gap"></i> Rooms
+            </button>
+            <button id="trendsTabBtn" class="ev-tab" onclick="showTab('trends')">
+                <i class="bi bi-graph-up"></i> Trends
+            </button>
+        </div>
+
+        <!-- Rooms Tab -->
+        <div id="roomsTab" class="tab-content">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
+
+                    <div data-room="AIEB 216" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 216</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 205" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 205</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 237" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 237</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 238" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 238</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 242" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 242</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 261" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 261</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 253" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 253</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 241" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 241</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB 376" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 376</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR 223" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 223</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR 224" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 224</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR 225" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 225</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LSC 1" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LSC 1</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="LSC 2" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LSC 2</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="LSC 3" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LSC 3</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-center mt-4 ev-section-title">
+                    <i class="bi bi-activity"></i> Live Traffic Tracker
+                </h4>
+
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 16px;">
+
+
+                    <div data-room="The Fit" class="ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: white;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap:10px;">
+                                <i class="bi bi-heart-pulse fs-5"></i>
+                                <p style="margin: 0;"><strong>The Fit</strong></p>
+                            </div>
+                            <p style="margin: 0;"><strong>BUSY</strong></p>
+                            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                        </div>
+                    </div>
+
+                    <div data-room="The Caf" class="ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: white;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap:10px;">
+                                <i class="bi bi-cup-hot fs-5"></i>
+                                <p style="margin: 0;"><strong>The Caf</strong></p>
+                            </div>
+                            <p style="margin: 0;"><strong>BUSY</strong></p>
+                            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                        </div>
+                    </div>
+
+                    <div data-room="Library" class="ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 1020px;
+        background-color: white;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap:10px;">
+                                <i class="bi bi-book fs-5"></i>
+                                <p style="margin: 0;"><strong>Library</strong></p>
+                            </div>
+                            <p style="margin: 0;"><strong>BUSY</strong></p>
+                            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="map-card" style="margin-left:auto; margin-right:auto;">
+                        <div class="map-head">
+                            <span><i class="bi bi-map"></i> Campus Map</span>
+                            <span style="color: rgba(0,0,0,0.6); font-weight: 700;">
+                            </span>
+                        </div>
+                        <iframe
+                            src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
+                            width="100%" height="800" style="border: 0;"></iframe>
+                    </div>
+
+                    <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
+                        Built for fast decisions • Eagle Vision
+                    </div>
+
+                </div>
+            </div>
+        </div> <!-- End Rooms Tab -->
+
+        <!-- Trends Tab -->
+        <div id="trendsTab" class="tab-content" style="display: none;">
+            <div style="max-width: 1100px; margin: 24px auto; padding: 0 16px;">
+
+                <!-- Overview Stats -->
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;">
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #117a3a;" id="statVacantRooms">--</div>
+                        <div style="color: #666; font-weight: 600;">Vacant Rooms</div>
+                    </div>
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #b42318;" id="statOccupiedRooms">--</div>
+                        <div style="color: #666; font-weight: 600;">Occupied Rooms</div>
+                    </div>
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #0891b2;" id="statAvgOccupancy">--</div>
+                        <div style="color: #666; font-weight: 600;">Avg Devices/Room</div>
+                    </div>
+                </div>
+
+                <!-- Occupancy by Building Chart -->
+                <div class="ev-card" style="padding: 24px; margin-bottom: 24px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                        <h5 style="margin: 0; font-weight: 700;">
+                            <i class="bi bi-bar-chart"></i> Occupancy by Building
+                        </h5>
+                        <select id="buildingChartSelect"
+                            style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                            <option value="all">All Buildings</option>
+                        </select>
+                    </div>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="buildingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Room Status Distribution -->
+                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                    <div class="ev-card" style="padding: 24px; flex: 1; min-width: 300px;">
+                        <h5 style="margin-bottom: 16px; font-weight: 700;">
+                            <i class="bi bi-pie-chart"></i> Room Status Distribution
+                        </h5>
+                        <div style="height: 200px; position: relative;">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="ev-card" style="padding: 24px; flex: 1; min-width: 300px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                            <h5 style="margin: 0; font-weight: 700;">
+                                <i class="bi bi-clock-history"></i> Peak Hours (Last 7 Days)
+                            </h5>
+                            <select id="peakHoursRoomSelect"
+                                style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                                <option value="all">All Rooms</option>
+                            </select>
+                        </div>
+                        <div style="height: 200px; position: relative;">
+                            <canvas id="peakHoursChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
+                    Data updates in real-time • Eagle Vision Analytics
+                </div>
+            </div>
+        </div> <!-- End Trends Tab -->
+
+    </main>
     </div>
 
-    <div class="mt-3"
-      style="display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
-      <div id="resultsCount" class="ev-pill">
-        <i class="bi bi-grid-3x3-gap"></i> Results: 0
-      </div>
-      <div class="ev-legend">
-        <span class="ev-badge"
-          style="color:#117a3a; border-color: rgba(17,122,58,0.25); background: rgba(17,122,58,0.10);">
-          <i class="bi bi-check-circle"></i> Vacant
-        </span>
-        <span class="ev-badge"
-          style="color:#b42318; border-color: rgba(180,35,24,0.25); background: rgba(180,35,24,0.10);">
-          <i class="bi bi-x-circle"></i> Occupied
-        </span>
-        <span class="ev-badge"
-          style="color:#8a6a00; border-color: rgba(138,106,0,0.25); background: rgba(255,193,7,0.18);">
-          <i class="bi bi-dash-circle"></i> Moderate
-        </span>
-      </div>
-    </div>
 
-    <h4 class="text-center mt-4 ev-section-title">
-      <i class="bi bi-people"></i> Collaboration Rooms
-    </h4>
 
-    <div style="max-width: 1100px; margin: 0 auto;">
-      <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const roomSearch = document.getElementById("roomSearch");
+        const campusSelect = document.getElementById("campus");
+        const resultsCount = document.getElementById("resultsCount");
 
-        <div data-room="AIEB 216" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 216</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 205" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 205</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 237" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 237</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 238" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 238</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 242" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 242</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 261" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 261</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 253" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 253</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 241" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 241</strong></p>
-          </div>
-        </div>
-
-        <div data-room="AIEB 376" data-building="AIEB" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>AIEB 376</strong></p>
-          </div>
-        </div>
-
-        <div data-room="LIBR 223" data-building="Library" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>LIBR 223</strong></p>
-            <a
-              href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
-                class="btn btn-primary btn-sm">Book</button></a>
-          </div>
-        </div>
-
-        <div data-room="LIBR 224" data-building="Library" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>LIBR 224</strong></p>
-            <a
-              href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
-                class="btn btn-primary btn-sm">Book</button></a>
-          </div>
-        </div>
-
-        <div data-room="LIBR 225" data-building="Library" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>LIBR 225</strong></p>
-            <a
-              href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03"><button
-                class="btn btn-primary btn-sm">Book</button></a>
-          </div>
-        </div>
-
-        <div data-room="LSC 1" data-building="LSC" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>LSC 1</strong></p>
-          </div>
-        </div>
-
-        <div data-room="LSC 2" data-building="LSC" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>LSC 2</strong></p>
-          </div>
-        </div>
-
-        <div data-room="LSC 3" data-building="LSC" data-occupied="false" class="room-card ev-card"
-          style="width: 320px; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <p style="margin:0;"><strong>LSC 3</strong></p>
-          </div>
-        </div>
-
-      </div>
-
-      <h4 class="text-center mt-4 ev-section-title">
-        <i class="bi bi-activity"></i> Live Traffic Tracker
-      </h4>
-
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 16px;">
-
-        <div data-room="The Fit" class="ev-card"
-          style="width: 100%; max-width: 1020px; background-color: white; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap:10px;">
-              <i class="bi bi-heart-pulse fs-5"></i>
-              <p style="margin: 0;"><strong>The Fit</strong></p>
-            </div>
-            <p style="margin: 0;"><strong>BUSY</strong></p>
-            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
-          </div>
-        </div>
-
-        <div data-room="The Caf" class="ev-card"
-          style="width: 100%; max-width: 1020px; background-color: white; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap:10px;">
-              <i class="bi bi-cup-hot fs-5"></i>
-              <p style="margin: 0;"><strong>The Caf</strong></p>
-            </div>
-            <p style="margin: 0;"><strong>BUSY</strong></p>
-            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
-          </div>
-        </div>
-
-        <div data-room="Library" class="ev-card"
-          style="width: 100%; max-width: 1020px; background-color: white; padding: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap:10px;">
-              <i class="bi bi-book fs-5"></i>
-              <p style="margin: 0;"><strong>Library</strong></p>
-            </div>
-            <p style="margin: 0;"><strong>BUSY</strong></p>
-            <p style="margin: 0;">Last updated: <strong>Now</strong></p>
-          </div>
-        </div>
-
-        <div class="map-card" style="margin-left:auto; margin-right:auto;">
-          <div class="map-head">
-            <span><i class="bi bi-map"></i> Campus Map</span>
-          </div>
-          <iframe
-            src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
-            width="100%" height="800" style="border: 0;"></iframe>
-        </div>
-
-        <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
-          Built for fast decisions • Eagle Vision
-        </div>
-
-      </div>
-    </div>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-
-  <script>
-    const roomSearch = document.getElementById("roomSearch");
-    const campusSelect = document.getElementById("campus");
-    const resultsCount = document.getElementById("resultsCount");
-
-    function statusFromOccupiedBool(occupiedStr) {
-      return occupiedStr === "true" ? "OCCUPIED" : "VACANT";
-    }
-
-    function addStatusBadges() {
-      document.querySelectorAll(".room-card").forEach(card => {
-        if (card.querySelector(".ev-badge")) return;
-
-        const occupiedStr = card.dataset.occupied;
-        const label = statusFromOccupiedBool(occupiedStr);
-
-        const topRow = card.querySelector("div");
-        if (!topRow) return;
-
-        const badge = document.createElement("span");
-        badge.className = "ev-badge";
-        badge.textContent = label;
-
-        if (label === "VACANT") {
-          badge.style.color = "#117a3a";
-          badge.style.borderColor = "rgba(17,122,58,0.25)";
-          badge.style.background = "rgba(17,122,58,0.10)";
-        } else {
-          badge.style.color = "#b42318";
-          badge.style.borderColor = "rgba(180,35,24,0.25)";
-          badge.style.background = "rgba(180,35,24,0.10)";
+        // Dark mode management
+        function initDarkMode() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('darkModeIcon').className = 'bi bi-sun-fill';
+            }
         }
 
-        topRow.appendChild(badge);
-      });
-    }
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('darkModeIcon');
 
-    function updateCardStatus(fullName, isOccupied) {
-      const card = document.querySelector(`.room-card[data-room="${fullName}"]`);
-      if (!card) {
-        console.log('[Frontend] No card found for:', fullName);
-        return;
-      }
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                icon.className = 'bi bi-moon-fill';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'bi bi-sun-fill';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
 
-      console.log('[Frontend] Updating card:', fullName, '-> isOccupied:', isOccupied);
-      card.dataset.occupied = isOccupied ? "true" : "false";
+        // Initialize dark mode on page load
+        initDarkMode();
 
-      // Update badge
-      let badge = card.querySelector(".ev-badge");
-      if (!badge) {
-        const topRow = card.querySelector("div");
-        badge = document.createElement("span");
-        badge.className = "ev-badge";
-        topRow.appendChild(badge);
-      }
+        // Favorites management (stored in localStorage)
+        function getFavorites() {
+            const favs = localStorage.getItem('roomFavorites');
+            return favs ? JSON.parse(favs) : [];
+        }
 
-      const label = isOccupied ? "OCCUPIED" : "VACANT";
-      badge.textContent = label;
+        function saveFavorites(favorites) {
+            localStorage.setItem('roomFavorites', JSON.stringify(favorites));
+        }
 
-      if (label === "VACANT") {
-        badge.style.color = "#117a3a";
-        badge.style.borderColor = "rgba(17,122,58,0.25)";
-        badge.style.background = "rgba(17,122,58,0.10)";
-      } else {
-        badge.style.color = "#b42318";
-        badge.style.borderColor = "rgba(180,35,24,0.25)";
-        badge.style.background = "rgba(180,35,24,0.10)";
-      }
-    }
+        function toggleFavorite(btn) {
+            const card = btn.closest('.room-card');
+            const roomName = card.dataset.room;
+            let favorites = getFavorites();
 
-    function applyFilters() {
-      const query = roomSearch.value.toLowerCase().trim();
-      const selectedCampus = campusSelect.value;
-      let visibleCount = 0;
+            if (favorites.includes(roomName)) {
+                // Remove from favorites
+                favorites = favorites.filter(f => f !== roomName);
+                btn.classList.remove('favorited');
+                btn.querySelector('i').className = 'bi bi-pin-angle';
+                card.classList.remove('is-favorite');
+            } else {
+                // Pin to top
+                favorites.push(roomName);
+                btn.classList.add('favorited');
+                btn.querySelector('i').className = 'bi bi-pin-angle-fill';
+                card.classList.add('is-favorite');
+            }
 
-      document.querySelectorAll(".room-card").forEach(card => {
-        const roomName = (card.dataset.room || "").toLowerCase();
-        const building = card.dataset.building;
+            saveFavorites(favorites);
+            reorderPinnedRooms();
+            applyFilters();
+        }
 
-        const matchesSearch = roomName.includes(query);
-        const matchesCampus = selectedCampus === "" || building === selectedCampus;
+        function initFavorites() {
+            const favorites = getFavorites();
+            document.querySelectorAll('.room-card').forEach(card => {
+                const roomName = card.dataset.room;
+                const btn = card.querySelector('.fav-btn');
+                if (btn && favorites.includes(roomName)) {
+                    btn.classList.add('favorited');
+                    btn.querySelector('i').className = 'bi bi-pin-angle-fill';
+                    card.classList.add('is-favorite');
+                }
+            });
+            reorderPinnedRooms();
+        }
 
-        const show = matchesSearch && matchesCampus;
-        card.style.display = show ? "" : "none";
+        function reorderPinnedRooms() {
+            const container = document.querySelector('#roomsTab > div > div');
+            if (!container) return;
 
-        if (show) visibleCount++;
-      });
+            const favorites = getFavorites();
+            const cards = Array.from(container.querySelectorAll('.room-card'));
 
-      resultsCount.innerHTML = `<i class="bi bi-grid-3x3-gap"></i> Results: ${visibleCount}`;
-    }
+            // Sort: pinned first, then alphabetically
+            cards.sort((a, b) => {
+                const aFav = favorites.includes(a.dataset.room);
+                const bFav = favorites.includes(b.dataset.room);
+                if (aFav && !bFav) return -1;
+                if (!aFav && bFav) return 1;
+                return (a.dataset.room || '').localeCompare(b.dataset.room || '');
+            });
 
-    // Initialize badges and filters
-    addStatusBadges();
-    applyFilters();
+            // Reorder in DOM
+            cards.forEach(card => container.appendChild(card));
+        }
 
-    roomSearch.addEventListener("input", applyFilters);
-    campusSelect.addEventListener("change", applyFilters);
+        // Occupancy levels based on device count
+        // 0: Vacant, 1: Low, 2-3: Medium, 4+: High
+        function getOccupancyLevel(deviceCount) {
+            if (deviceCount === 0) return 'vacant';
+            if (deviceCount === 1) return 'low';
+            if (deviceCount <= 3) return 'medium';
+            return 'high';
+        }
 
-    // Socket.io for real-time MQTT updates
-    console.log('[Frontend] Initializing Socket.io connection...');
-    const socket = io();
+        function getOccupancyLabel(level) {
+            switch (level) {
+                case 'vacant': return 'VACANT';
+                case 'low': return 'LOW';
+                case 'medium': return 'MEDIUM';
+                case 'high': return 'HIGH';
+                default: return 'VACANT';
+            }
+        }
 
-    socket.on('connect', () => {
-      console.log('[Socket.io] ✓ Connected to server! Socket ID:', socket.id);
-    });
+        function getOccupancyStyle(level) {
+            switch (level) {
+                case 'vacant':
+                    return { color: '#117a3a', borderColor: 'rgba(17,122,58,0.25)', background: 'rgba(17,122,58,0.10)' };
+                case 'low':
+                    return { color: '#0891b2', borderColor: 'rgba(8,145,178,0.25)', background: 'rgba(8,145,178,0.10)' };
+                case 'medium':
+                    return { color: '#d97706', borderColor: 'rgba(217,119,6,0.25)', background: 'rgba(217,119,6,0.10)' };
+                case 'high':
+                    return { color: '#b42318', borderColor: 'rgba(180,35,24,0.25)', background: 'rgba(180,35,24,0.10)' };
+                default:
+                    return { color: '#117a3a', borderColor: 'rgba(17,122,58,0.25)', background: 'rgba(17,122,58,0.10)' };
+            }
+        }
 
-    socket.on('connect_error', (error) => {
-      console.error('[Socket.io] ✗ Connection error:', error);
-    });
+        // Add badges on page load based on data-occupancy attribute
+        function addStatusBadges() {
+            document.querySelectorAll(".room-card").forEach(card => {
+                if (card.querySelector(".ev-badge")) return;
 
-    socket.on('disconnect', (reason) => {
-      console.log('[Socket.io] Disconnected. Reason:', reason);
-    });
+                // Default to vacant if no occupancy set
+                const level = card.dataset.occupancy || 'vacant';
+                const label = getOccupancyLabel(level);
+                const style = getOccupancyStyle(level);
 
-    socket.on('sensor-update', (data) => {
-      console.log('[Frontend] Received sensor-update:', data);
+                const topRow = card.querySelector("div");
+                if (!topRow) return;
 
-      // data contains: { fullName: "AIEB 216", detected: true/false, roomName: "AIEB", roomID: 216 }
-      if (data.fullName) {
-        updateCardStatus(data.fullName, data.detected);
+                const badge = document.createElement("span");
+                badge.className = "ev-badge";
+                badge.textContent = label;
+                badge.style.color = style.color;
+                badge.style.borderColor = style.borderColor;
+                badge.style.background = style.background;
+
+                topRow.appendChild(badge);
+            });
+        }
+
+        // Update a single card's status based on device count
+        function updateCardStatus(fullName, deviceCount) {
+            const card = document.querySelector(`.room-card[data-room="${fullName}"]`);
+            if (!card) {
+                console.log('[Frontend] No card found for:', fullName);
+                return;
+            }
+
+            const level = getOccupancyLevel(deviceCount);
+            const label = getOccupancyLabel(level);
+            const style = getOccupancyStyle(level);
+
+            console.log('[Frontend] Updating card:', fullName, '-> deviceCount:', deviceCount, 'level:', level);
+            card.dataset.occupancy = level;
+            card.dataset.deviceCount = deviceCount;
+
+            // Update badge
+            let badge = card.querySelector(".ev-badge");
+            if (!badge) {
+                const topRow = card.querySelector("div");
+                badge = document.createElement("span");
+                badge.className = "ev-badge";
+                topRow.appendChild(badge);
+            }
+
+            badge.textContent = label;
+            badge.style.color = style.color;
+            badge.style.borderColor = style.borderColor;
+            badge.style.background = style.background;
+        }
+
+        function updateRoomCards(roomStatusList) {
+            // roomStatusList: [{roomID, roomName, buildingCode, fullName, isOccupied}]
+            console.log('[updateRoomCards] Updating rooms with:', roomStatusList);
+
+            // Get all card room names for debugging
+            const cards = Array.from(document.querySelectorAll(".room-card"));
+            const cardRooms = cards.map(c => c.dataset.room);
+            const dbFullNames = roomStatusList.map(r => r.fullName);
+            console.log('[updateRoomCards] HTML card room names:', cardRooms);
+            console.log('[updateRoomCards] Database fullNames:', dbFullNames);
+            console.log('[updateRoomCards] Matching results:');
+
+            let updateCount = 0;
+            cards.forEach(card => {
+                const roomName = card.dataset.room; // e.g., "AIEB 216"
+
+                // Match by fullName (buildingCode + roomName from DB)
+                let status = roomStatusList.find(r => r.fullName === roomName);
+                // Also try case-insensitive match
+                if (!status) {
+                    status = roomStatusList.find(r => r.fullName && r.fullName.toLowerCase() === roomName.toLowerCase());
+                }
+
+                if (status) {
+                    console.log('  ✓', roomName, '-> matched with', status.fullName, '. isOccupied:', status.isOccupied);
+
+                    // Use device count if available, otherwise convert isOccupied to count
+                    const deviceCount = status.deviceCount !== undefined ? status.deviceCount : (status.isOccupied === 1 ? 1 : 0);
+                    const level = getOccupancyLevel(deviceCount);
+                    const label = getOccupancyLabel(level);
+                    const style = getOccupancyStyle(level);
+
+                    card.dataset.occupancy = level;
+                    card.dataset.deviceCount = deviceCount;
+
+                    // Update badge
+                    let badge = card.querySelector(".ev-badge");
+                    if (!badge) {
+                        const topRow = card.querySelector("div");
+                        badge = document.createElement("span");
+                        badge.className = "ev-badge";
+                        topRow.appendChild(badge);
+                    }
+                    badge.textContent = label;
+                    badge.style.color = style.color;
+                    badge.style.borderColor = style.borderColor;
+                    badge.style.background = style.background;
+                    updateCount++;
+                } else {
+                    console.log('  ✗', roomName, '-> NO MATCH in database. Available:', dbFullNames.join(', '));
+                }
+            });
+            console.log('[updateRoomCards] Total cards updated:', updateCount, 'out of', cards.length);
+        }
+
+        function applyFilters() {
+            const query = roomSearch.value.toLowerCase().trim();
+            const selectedCampus = campusSelect.value;
+            const selectedOccupancy = document.getElementById('occupancyFilter').value;
+            const favorites = getFavorites();
+            let visibleCount = 0;
+            document.querySelectorAll(".room-card").forEach(card => {
+                const roomName = (card.dataset.room || "").toLowerCase();
+                const roomNameFull = card.dataset.room || "";
+                const building = card.dataset.building;
+                const occupancy = card.dataset.occupancy || 'vacant';
+                const isFavorite = favorites.includes(roomNameFull);
+                const matchesSearch = roomName.includes(query);
+                const matchesCampus = selectedCampus === "" || building === selectedCampus;
+                const matchesOccupancy = selectedOccupancy === "" ||
+                    (selectedOccupancy === "favorites" ? isFavorite : occupancy === selectedOccupancy);
+                const show = (matchesSearch && matchesCampus && matchesOccupancy);
+                card.style.display = show ? "" : "none";
+                if (show) visibleCount++;
+            });
+            resultsCount.innerHTML = `<i class="bi bi-grid-3x3-gap"></i> Results: ${visibleCount}`;
+        }
+
+        // Add badges on page load
+        addStatusBadges();
+        initFavorites();
         applyFilters();
-      } else {
-        console.log('[Frontend] No fullName in sensor-update data');
-      }
-    });
-  </script>
+
+        // Initial load from API (optional - updates from MQTT will override)
+        console.log('[Frontend] Loading initial room status...');
+        fetch('/api/rooms/status')
+            .then(r => {
+                console.log('[Frontend] Initial API response status:', r.status);
+                return r.json();
+            })
+            .then(roomStatusList => {
+                console.log('[Frontend] Initial room status loaded:', roomStatusList);
+                if (!roomStatusList || roomStatusList.length === 0) {
+                    console.warn('[Frontend] No rooms returned from initial load!');
+                }
+                updateRoomCards(roomStatusList);
+                applyFilters();
+            })
+            .catch(err => console.error('[Frontend] Error loading room status:', err));
+
+        // Live updates via socket.io
+        console.log('[Frontend] Initializing Socket.io connection...');
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log('[Socket.io] ✓ Connected to server! Socket ID:', socket.id);
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('[Socket.io] ✗ Connection error:', error);
+        });
+
+        socket.on('disconnect', (reason) => {
+            console.log('[Socket.io] Disconnected. Reason:', reason);
+        });
+
+        socket.on('sensor-update', (data) => {
+            console.log('[Frontend] Received sensor-update:', data);
+
+            // data contains: { fullName: "AIEB 216", deviceCount: number, roomName: "AIEB", roomID: 216 }
+            if (data.fullName) {
+                const deviceCount = data.deviceCount !== undefined ? data.deviceCount : 0;
+                updateCardStatus(data.fullName, deviceCount);
+                applyFilters();
+            } else {
+                console.log('[Frontend] No fullName in sensor-update data');
+            }
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+        roomSearch.addEventListener("input", applyFilters);
+        campusSelect.addEventListener("change", applyFilters);
+        document.getElementById('occupancyFilter').addEventListener("change", applyFilters);
+
+        // Tab Switching
+        function showTab(tabName) {
+            const roomsTab = document.getElementById('roomsTab');
+            const trendsTab = document.getElementById('trendsTab');
+            const roomsBtn = document.getElementById('roomsTabBtn');
+            const trendsBtn = document.getElementById('trendsTabBtn');
+
+            if (tabName === 'rooms') {
+                roomsTab.style.display = 'block';
+                trendsTab.style.display = 'none';
+                roomsBtn.classList.add('active');
+                trendsBtn.classList.remove('active');
+            } else {
+                roomsTab.style.display = 'none';
+                trendsTab.style.display = 'block';
+                roomsBtn.classList.remove('active');
+                trendsBtn.classList.add('active');
+                updateTrendsData();
+            }
+        }
+
+        // Make showTab available globally
+        window.showTab = showTab;
+
+        // Chart instances
+        let buildingChart = null;
+        let statusChart = null;
+        let peakHoursChart = null;
+
+        async function updateTrendsData() {
+            // Calculate stats from room cards (real-time from current state)
+            const cards = document.querySelectorAll('.room-card');
+            let vacant = 0, low = 0, medium = 0, high = 0;
+            let totalDevices = 0;
+
+            cards.forEach(card => {
+                const level = card.dataset.occupancy || 'vacant';
+                const deviceCount = parseInt(card.dataset.deviceCount) || 0;
+                totalDevices += deviceCount;
+
+                switch (level) {
+                    case 'vacant': vacant++; break;
+                    case 'low': low++; break;
+                    case 'medium': medium++; break;
+                    case 'high': high++; break;
+                }
+            });
+
+            // Update stats
+            document.getElementById('statVacantRooms').textContent = vacant;
+            document.getElementById('statOccupiedRooms').textContent = cards.length - vacant;
+            document.getElementById('statAvgOccupancy').textContent =
+                cards.length > 0 ? (totalDevices / cards.length).toFixed(1) : '0';
+
+            // Populate dropdowns and update charts
+            await populateBuildingDropdown();
+            await updateBuildingChart('all');
+
+            // Status Distribution Chart (from real-time DOM data)
+            if (statusChart) statusChart.destroy();
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Vacant (0)', 'Low (1)', 'Medium (2-3)', 'High (4+)'],
+                    datasets: [{
+                        data: [vacant, low, medium, high],
+                        backgroundColor: ['#117a3a', '#0891b2', '#d97706', '#b42318'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
+            });
+
+            // Populate room dropdown
+            await populateRoomDropdown();
+
+            // Peak Hours Chart from API
+            await updatePeakHoursChart('all');
+        }
+
+        // Populate building dropdown
+        async function populateBuildingDropdown() {
+            const select = document.getElementById('buildingChartSelect');
+            // Only populate once
+            if (select.options.length > 1) return;
+
+            try {
+                const res = await fetch('/api/buildings/list');
+                const buildings = await res.json();
+                buildings.filter(b => b.buildingCode !== 'ENG').forEach(b => {
+                    const option = document.createElement('option');
+                    option.value = b.buildingCode;
+                    option.textContent = b.buildingCode + ' - ' + b.buildingName;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Error fetching buildings:', err);
+            }
+        }
+
+        // Update building chart (all buildings or specific building rooms)
+        async function updateBuildingChart(buildingCode) {
+            try {
+                const url = buildingCode === 'all'
+                    ? '/api/analytics/by-building'
+                    : `/api/analytics/by-building?buildingCode=${buildingCode}`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (buildingChart) buildingChart.destroy();
+                const buildingCtx = document.getElementById('buildingChart').getContext('2d');
+
+                if (buildingCode === 'all') {
+                    // Show all buildings summary (exclude ENG for now)
+                    const filteredData = data.filter(b => b.buildingCode !== 'ENG');
+                    const labels = filteredData.map(b => b.buildingCode || 'Unknown');
+                    const occupied = filteredData.map(b => Number(b.occupiedRooms) || 0);
+                    const vacant = filteredData.map(b => (Number(b.totalRooms) || 0) - (Number(b.occupiedRooms) || 0));
+
+                    buildingChart = new Chart(buildingCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                { label: 'Occupied', data: occupied, backgroundColor: '#b42318', borderRadius: 8 },
+                                { label: 'Vacant', data: vacant, backgroundColor: '#117a3a', borderRadius: 8 }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: 'top' } },
+                            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                        }
+                    });
+                } else {
+                    // Show individual rooms in selected building
+                    const labels = data.map(r => r.fullName || r.roomName);
+                    // Use constant height of 1, color indicates status
+                    const barValues = data.map(() => 1);
+                    const barColors = data.map(r => r.isOccupied ? '#b42318' : '#117a3a');
+                    const statusLabels = data.map(r => r.isOccupied ? 'Occupied' : 'Vacant');
+
+                    buildingChart = new Chart(buildingCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Room Status',
+                                data: barValues,
+                                backgroundColor: barColors,
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return statusLabels[context.dataIndex];
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    display: false,
+                                    beginAtZero: true,
+                                    max: 1
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Error fetching building data:', err);
+            }
+        }
+
+        // Building dropdown change handler
+        document.getElementById('buildingChartSelect').addEventListener('change', (e) => {
+            updateBuildingChart(e.target.value);
+        });
+
+        // Populate room dropdown for peak hours filter
+        async function populateRoomDropdown() {
+            const select = document.getElementById('peakHoursRoomSelect');
+            // Only populate once
+            if (select.options.length > 1) return;
+
+            try {
+                const res = await fetch('/api/rooms/list');
+                const rooms = await res.json();
+                rooms.forEach(room => {
+                    const option = document.createElement('option');
+                    option.value = room.roomID;
+                    option.textContent = room.fullName;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Error fetching rooms:', err);
+            }
+        }
+
+        // Update peak hours chart for specific room
+        async function updatePeakHoursChart(roomID) {
+            try {
+                const url = roomID === 'all'
+                    ? '/api/analytics/peak-hours'
+                    : `/api/analytics/peak-hours?roomID=${roomID}`;
+                const peakRes = await fetch(url);
+                const peakData = await peakRes.json();
+
+                // Create full 24-hour chart with API data
+                const hourLabels = [];
+                const hourData = [];
+                for (let h = 6; h <= 22; h++) {
+                    const label = h < 12 ? `${h}AM` : h === 12 ? '12PM' : `${h - 12}PM`;
+                    hourLabels.push(label);
+                    const found = peakData.find(p => p.hour === h);
+                    // Show average device count per hour
+                    hourData.push(found ? Number(found.avg_devices) || 0 : 0);
+                }
+
+                if (peakHoursChart) peakHoursChart.destroy();
+                const peakCtx = document.getElementById('peakHoursChart').getContext('2d');
+                peakHoursChart = new Chart(peakCtx, {
+                    type: 'line',
+                    data: {
+                        labels: hourLabels,
+                        datasets: [{
+                            label: 'Avg Devices',
+                            data: hourData,
+                            borderColor: '#0891b2',
+                            backgroundColor: 'rgba(8, 145, 178, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            } catch (err) {
+                console.error('Error fetching peak hours:', err);
+            }
+        }
+
+        // Room dropdown change handler
+        document.getElementById('peakHoursRoomSelect').addEventListener('change', (e) => {
+            updatePeakHoursChart(e.target.value);
+        });
+    </script>
+
 
 </body>
 
