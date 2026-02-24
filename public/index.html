@@ -335,7 +335,7 @@
 
         <!-- Logo -->
         <a class="navbar-brand text-white" href="#">
-            <img src="logo.svg" alt="EagleVision Logo" class="img-fluid" style="max-height: 200px;" />
+            <img src="logo2.png" alt="EagleVision Logo" class="img-fluid" style="max-height: 200px;" />
         </a>
 
     </div>
@@ -1152,43 +1152,47 @@
             })
             .catch(err => console.error('[Frontend] Error loading room status:', err));
 
-        // Live updates via socket.io
-        console.log('[Frontend] Initializing Socket.io connection...');
-        const socket = io();
+            // ✅ Hook up filters FIRST so search/dropdowns always work
+            roomSearch.addEventListener("input", applyFilters);
+            campusSelect.addEventListener("change", applyFilters);
+            document.getElementById('occupancyFilter').addEventListener("change", applyFilters);
 
-        socket.on('connect', () => {
-            console.log('[Socket.io] ✓ Connected to server! Socket ID:', socket.id);
-        });
+            // ✅ Live updates via socket.io (guarded so it can't break the page)
+            let socket = null;
 
-        socket.on('connect_error', (error) => {
-            console.error('[Socket.io] ✗ Connection error:', error);
-        });
+            if (window.io) {
+              console.log('[Frontend] Initializing Socket.io connection...');
+              socket = io();
 
-        socket.on('disconnect', (reason) => {
-            console.log('[Socket.io] Disconnected. Reason:', reason);
-        });
+              socket.on('connect', () => {
+                console.log('[Socket.io] ✓ Connected to server! Socket ID:', socket.id);
+              });
 
-        socket.on('sensor-update', (data) => {
-            console.log('[Frontend] Received sensor-update:', data);
+              socket.on('connect_error', (error) => {
+                console.error('[Socket.io] ✗ Connection error:', error);
+              });
 
-            // data contains: { fullName: "AIEB 216", deviceCount: number, roomName: "AIEB", roomID: 216 }
-            if (data.fullName) {
-                const deviceCount = data.deviceCount !== undefined ? data.deviceCount : 0;
-                updateCardStatus(data.fullName, deviceCount);
-                applyFilters();
+              socket.on('disconnect', (reason) => {
+                console.log('[Socket.io] Disconnected. Reason:', reason);
+              });
+
+              socket.on('sensor-update', (data) => {
+                console.log('[Frontend] Received sensor-update:', data);
+
+                // data contains: { fullName: "AIEB 216", deviceCount: number, roomName: "AIEB", roomID: 216 }
+                if (data.fullName) {
+                  const deviceCount = data.deviceCount !== undefined ? data.deviceCount : 0;
+                  updateCardStatus(data.fullName, deviceCount);
+                  applyFilters();
+                } else {
+                  console.log('[Frontend] No fullName in sensor-update data');
+                }
+              });
+
             } else {
-                console.log('[Frontend] No fullName in sensor-update data');
+              console.warn('[Socket.io] socket.io client not loaded -> live updates disabled (filters still work).');
             }
-        });
-
-        socket.on('disconnect', () => {
-            console.log('Disconnected from server');
-        });
-
-        roomSearch.addEventListener("input", applyFilters);
-        campusSelect.addEventListener("change", applyFilters);
-        document.getElementById('occupancyFilter').addEventListener("change", applyFilters);
-
+            
         // Tab Switching
         function showTab(tabName) {
             const roomsTab = document.getElementById('roomsTab');
