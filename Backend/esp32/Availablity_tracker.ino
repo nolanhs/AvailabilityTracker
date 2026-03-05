@@ -11,16 +11,18 @@
 const char* roomName = "AIEB";
 const int roomID = 216;
 
-const char* mqttServer = "10.143.202.137"; // needs to change based on local host
+const char* mqttServer = "10.143.129.210"; // needs to change based on local host
 const int mqttPort = 1883;
 const char* mqttTopic = "ble/presence";
 
-int rssiThreshold = -65;
-int scanTime = 3; // Reduced from 5 to 3 to avoid watchdog timeout
+//const char* SERVER_URL = "http://35.243.237.220:8080/api/occupancy";
 
-#define RESET_BUTTON 0
+int rssiThreshold = -65;
+int scanTime = 5; 
+
+#define RESET_BUTTON 0  
 #define RESET_HOLD_TIME 3000
-#define SERIAL_TIMEOUT 30000 // 30 second timeout for all serial input
+#define SERIAL_TIMEOUT 30000 
 
 /* ========= GLOBALS ========= */
 WiFiClient espClient;
@@ -391,5 +393,5 @@ void loop() {
         }
     }
 
-    delay(500);
+    delay(60000);
 };
