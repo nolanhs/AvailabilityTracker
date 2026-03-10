@@ -11,7 +11,7 @@
 const char* roomName = "AIEB";
 const int roomID = 216;
 
-const char* mqttServer = "10.143.129.210"; // needs to change based on local host
+const char* mqttServer = "35.243.237.220"; // needs to change based on local host
 const int mqttPort = 1883;
 const char* mqttTopic = "ble/presence";
 
@@ -393,5 +393,5 @@ void loop() {
         }
     }
 
-    delay(60000);
+    delay(120);
 };
