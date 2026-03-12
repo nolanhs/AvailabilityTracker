@@ -1,114 +1,799 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
-  <title>Eagle Vision</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <title>Eagle Vision</title>
+    <link rel="stylesheet" href="./styles.css" />
+
 </head>
 
-<body class="bg-light" style="background-color:#eedbbd; min-height: 100vh;">
+<body>
 
-  <!-- Header / Navbar -->
-  <nav class="navbar py-3"  style="background: linear-gradient(90deg, #194152, #2e525e, #50849a);"
->
-    <div class="container d-flex flex-wrap justify-content-center justify-content-md-between align-items-center gap-3">
+    <!-- Dark Mode Toggle (Fixed Bottom-Right) -->
+    <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+        <i class="bi bi-moon-fill" id="darkModeIcon"></i>
+    </button>
 
-      <!-- Logo -->
-      <a class="navbar-brand text-white" href="#">
-        <img
-          src="images/logo.svg"
-          alt="EagleVision Logo"
-          class="img-fluid"
-          style="max-height: 160px;"
-        />
-      </a>
+    <!-- Header / Navbar -->
+    <div class="container d-flex justify-content-center align-items-center">
 
-      <!-- Action Buttons -->
-      <div class="d-flex gap-2">
-        <a
-          href="https://www.tntech.edu/"
-          target="_blank"
-          class="btn btn-outline-light"
-        >
-          Visit Tennessee Tech
+        <!-- Logo -->
+        <a class="navbar-brand text-white" href="#">
+            <img src="logo.svg" alt="EagleVision Logo" class="img-fluid" style="max-height: 200px;" />
         </a>
 
-        <a
-          href="https://www.tntech.edu/maps/index.php"
-          target="_blank"
-          class="btn btn-outline-light d-flex align-items-center gap-2"
-        >
-          <span>Campus Map</span>
-        </a>
-      </div>
-
     </div>
-  </nav>
+    <div class="my-0"></div>
+    <!-- Main Content -->
+    <main class="container py-0">
 
-  <!-- Main Content -->
-  <main class="container py-4">
+        <label for="roomSearch" class="form-label visually-hidden">
+            Search Rooms
+        </label>
 
-    <label for="roomSearch" class="form-label visually-hidden">
-      Search Rooms
-    </label>
+        <input type="text" class="form-control" placeholder="Search Rooms... (ex: 216, AIEB, LIBR)" id="roomSearch" />
 
-    <input
-      type="text"
-      id="roomSearch"
-      class="form-control"
-      placeholder="Search Rooms..."
-    />
+        <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
+            <div>
+                <label for="campus"></label>
+                <select id="campus" name="campus">
+                    <option value="">All Buildings Selected</option>
+                    <option value="AIEB">AIEB</option>
+                    <option value="Library">Library</option>
+                    <option value="LSC">LSC</option>
+                </select>
+            </div>
+            <div>
+                <label for="occupancyFilter"></label>
+                <select id="occupancyFilter" name="occupancyFilter">
+                    <option value="">All Occupancies Shown</option>
+                    <option value="favorites">&#128204; Pinned</option>
+                    <option value="vacant">Vacant (0)</option>
+                    <option value="low">Low (1)</option>
+                    <option value="medium">Medium (2-3)</option>
+                    <option value="high">High (4+)</option>
+                </select>
+            </div>
+        </div>
+<div class="mt-3"
+            style="display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
+            <div id="resultsCount" class="ev-pill">
+                <i class="bi bi-grid-3x3-gap"></i> Results: 0
+            </div>
 
-    <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
+            <div class="ev-legend">
 
-      <div style="
+<span class="ev-badge"
+style="color:#117a3a; border-color: rgba(17,122,58,0.25); background: rgba(17,122,58,0.10);">
+<i class="bi bi-check-circle"></i>
+Vacant (<span id="vacantCount">0</span>)
+</span>
+
+<span class="ev-badge"
+style="color:#0891b2; border-color: rgba(8,145,178,0.25); background: rgba(8,145,178,0.10);">
+<i class="bi bi-person"></i>
+Low (<span id="lowCount">0</span>)
+</span>
+
+<span class="ev-badge"
+style="color:#d97706; border-color: rgba(217,119,6,0.25); background: rgba(217,119,6,0.10);">
+<i class="bi bi-people"></i>
+Medium (<span id="mediumCount">0</span>)
+</span>
+
+<span class="ev-badge"
+style="color:#b42318; border-color: rgba(180,35,24,0.25); background: rgba(180,35,24,0.10);">
+<i class="bi bi-people-fill"></i>
+High (<span id="highCount">0</span>)
+</span>
+
+</div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav" style="display: flex; gap: 8px; margin-top: 20px; justify-content: center;">
+            <button id="roomsTabBtn" class="ev-tab active" onclick="showTab('rooms')">
+                <i class="bi bi-grid-3x3-gap"></i> Rooms
+            </button>
+            <button id="trendsTabBtn" class="ev-tab" onclick="showTab('trends')">
+                <i class="bi bi-graph-up"></i> Trends
+            </button>
+        </div>
+
+        <!-- Rooms Tab -->
+        <div id="roomsTab" class="tab-content">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <div style="display: flex; gap: 24px; margin-top: 24px; justify-content: center; flex-wrap: wrap;">
+
+                    <div data-room="AIEB_216" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
-        background-color: whitesmoke;
+        background-color: lightgreen;
         margin-top: 20px;
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-        <p><strong>AIEB 216</strong></p>
-        <p style="color: green;">Status: Vacant</p>
-      </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 216</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
 
-      <div style="
+                    <div data-room="AIEB_205" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
-        background-color: whitesmoke;
+        background-color: lightcoral;
         margin-top: 20px;
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-        <p><strong>AIEB 205</strong></p>
-        <p style="color: red;">Status: Occupied</p>
-      </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 205</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
 
-      <div style="
+                    <div data-room="AIEB_237" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
         border: 1px solid black;
         border-radius: 14px;
         width: 320px;
-        background-color: whitesmoke;
+        background-color: lightcoral;
         margin-top: 20px;
         padding: 18px;
         box-shadow: 0 6px 12px rgba(0,0,0,0.08)
         ">
-        <p><strong>AIEB 237</strong></p>
-        <p style="color: red;">Status: Occupied</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 237</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_238" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 238</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_242" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 242</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_261" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 261</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_253" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 253</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_241" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 241</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_376" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 376</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_367" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 367</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_374" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 374</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_352" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 352</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_355" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 355</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="AIEB_317" data-building="AIEB" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>AIEB 317</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_223" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 223</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_224" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 224</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_225" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 225</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_226" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 226</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_227" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 227</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_228" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 228</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_242" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 242</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_243" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 243</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_244" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 244</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_245" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 245</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LIBR_246" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR 246</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div data-room="LIBR_247" data-building="Library" data-occupancy="vacant" class="room-card ev-card"
+                        style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LIBR_247</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <a
+                                href="https://techconnect.campus.eab.com/capabilities#/as3/appointment-results?care_unit_id=108&service_id=17367&begin_date=2026-02-03">
+                                <button class="btn btn-primary btn-sm">Book</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div data-room="LSC_1" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightgreen;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LSC_1</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="LSC_2" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LSC_2</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="LSC_3" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LSC_3</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+
+                    <div data-room="LSC_4" data-building="LSC" data-occupancy="vacant" class="room-card ev-card" style="
+        border: 1px solid black;
+        border-radius: 14px;
+        width: 320px;
+        background-color: lightcoral;
+        margin-top: 20px;
+        padding: 18px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08)
+        ">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0;"><strong>LSC_4</strong></p>
+                            <button class="fav-btn" onclick="toggleFavorite(this)" title="Pin to top"><i
+                                    class="bi bi-pin-angle"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 16px;">
+
+                    <div class="map-card" style="margin-left:auto; margin-right:auto;">
+                        <div class="map-head">
+                            <span><i class="bi bi-map"></i> Campus Map</span>
+                            <span style="color: rgba(0,0,0,0.6); font-weight: 700;">
+                            </span>
+                        </div>
+                        <iframe
+                            src="https://cdn.maps.moderncampus.net/nucloudmap/index.html?map=619&layer=Academic,Administrative,Student%20Life&zoom=1"
+                            width="100%" height="800" style="border: 0;"></iframe>
+                    </div>
+
+                    <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
+                        Built for fast decisions - Eagle Vision
+                    </div>
+
+                </div>
+                </div>
+                </div> <!-- Ending Rooms Tab -->
+
+        <!-- Trends Tab -->
+        <div id="trendsTab" class="tab-content" style="display: none;">
+            <div style="max-width: 1100px; margin: 24px auto; padding: 0 16px;">
+
+                <!-- Overview Stats -->
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;">
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #117a3a;" id="statVacantRooms">--</div>
+                        <div style="color: #666; font-weight: 600;">Vacant Rooms</div>
+                    </div>
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #b42318;" id="statOccupiedRooms">--</div>
+                        <div style="color: #666; font-weight: 600;">Occupied Rooms</div>
+                    </div>
+                    <div class="ev-card stat-card" style="padding: 20px; min-width: 200px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #0891b2;" id="statAvgOccupancy">--</div>
+                        <div style="color: #666; font-weight: 600;">Avg Devices/Room</div>
+                    </div>
+                </div>
+
+                <!-- Occupancy by Building Chart -->
+                <div class="ev-card" style="padding: 24px; margin-bottom: 24px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                        <h5 style="margin: 0; font-weight: 700;">
+                            <i class="bi bi-bar-chart"></i> Occupancy by Building
+                        </h5>
+                        <select id="buildingChartSelect"
+                            style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                            <option value="all">All Buildings</option>
+                        </select>
+                    </div>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="buildingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Room Status Distribution -->
+                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                    <div class="ev-card" style="padding: 24px; flex: 1; min-width: 300px;">
+                        <h5 style="margin-bottom: 16px; font-weight: 700;">
+                            <i class="bi bi-pie-chart"></i> Room Status Distribution
+                        </h5>
+                        <div style="height: 200px; position: relative;">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="ev-card" style="padding: 24px; flex: 1; min-width: 300px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                            <h5 style="margin: 0; font-weight: 700;">
+                                <i class="bi bi-clock-history"></i> Building Activity by Hour (Last 7 Days)
+                            </h5>
+                            <select id="peakHoursBuildingSelect"
+                                style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                                <option value="all">All Buildings</option>
+                            </select>
+                        </div>
+                        <div style="height: 200px; position: relative;">
+                            <canvas id="peakHoursChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="py-4 text-center" style="color: rgba(0,0,0,0.6); font-weight: 600;">
+                    Built for fast decisions - Eagle Vision
+                </div>
+            </div>
+        </div> <!-- End Trends Tab -->
+
+    </main>
     </div>
-  </div>
 
-  </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./script.js?v=20260311b"></script>
 </body>
+
 </html>
+
+
+
+

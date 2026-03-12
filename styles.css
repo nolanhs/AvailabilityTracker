@@ -1,0 +1,327 @@
+﻿/* Dark mode styles */
+        :root {
+            --bg-gradient-start: #f3e7c9;
+            --bg-gradient-end: #e6d9f2;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(0, 0, 0, 0.12);
+            --text-color: #1a1a2e;
+            --text-muted: #666;
+            --nav-bg: rgba(255, 255, 255, 0.55);
+            --control-bg: rgba(255, 255, 255, 0.70);
+            --badge-bg: rgba(255, 255, 255, 0.65);
+            --input-bg: #fff;
+            --input-border: #ccc;
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+            --card-bg: rgba(30, 30, 50, 0.85);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-color: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --nav-bg: rgba(26, 26, 46, 0.85);
+            --control-bg: rgba(30, 30, 50, 0.85);
+            --badge-bg: rgba(30, 30, 50, 0.75);
+            --input-bg: #2a2a4a;
+            --input-border: #444;
+        }
+
+        body {
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        [data-theme="dark"] .form-control {
+            background-color: var(--input-bg) !important;
+            border-color: var(--input-border) !important;
+            color: var(--text-color) !important;
+        }
+
+        [data-theme="dark"] .form-control::placeholder {
+            color: var(--text-muted) !important;
+        }
+
+        [data-theme="dark"] #campus,
+        [data-theme="dark"] #occupancyFilter,
+        [data-theme="dark"] #buildingSelect,
+        [data-theme="dark"] #roomSelect {
+            background-color: var(--input-bg) !important;
+            border-color: var(--input-border) !important;
+            color: var(--text-color) !important;
+        }
+
+        [data-theme="dark"] label {
+            color: var(--text-color) !important;
+        }
+
+        .dark-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            background: var(--control-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            color: var(--text-color);
+        }
+
+        .dark-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .dark-toggle {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .ev-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .ev-pill {
+            border: 1px solid var(--card-border);
+            background: var(--badge-bg);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* controls */
+        .ev-control {
+            border-radius: 999px !important;
+            border: 1px solid var(--card-border) !important;
+            background: var(--control-bg) !important;
+            backdrop-filter: blur(8px);
+            padding: 8px 14px !important;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* your cards, but cooler */
+        .ev-card {
+            border: 1px solid var(--card-border) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            background: var(--card-bg) !important;
+            color: var(--text-color);
+        }
+
+        .ev-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        [data-theme="dark"] .ev-card {
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        [data-theme="dark"] .ev-card:hover {
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .ev-badge {
+            font-size: 0.82rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--card-border);
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            background: var(--badge-bg);
+        }
+
+        .ev-legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .ev-section-title {
+            font-weight: 800;
+            letter-spacing: -0.2px;
+        }
+
+        .map-card {
+            margin-top: 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .map-head {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            font-weight: 800;
+        }
+
+        /* ADDED: white cards + occupancy level accent */
+        .room-card {
+            background: rgba(255, 255, 255, 0.75) !important;
+            transition: border-left-color 0.3s ease;
+        }
+
+        /* Vacant: 0 devices - Green */
+        .room-card[data-occupancy="vacant"] {
+            border-left: 8px solid #117a3a !important;
+        }
+
+        /* Low: 1 device - Light Blue/Teal */
+        .room-card[data-occupancy="low"] {
+            border-left: 8px solid #0891b2 !important;
+        }
+
+        /* Medium: 2-3 devices - Orange/Yellow */
+        .room-card[data-occupancy="medium"] {
+            border-left: 8px solid #d97706 !important;
+        }
+
+        /* High: 4+ devices - Red */
+        .room-card[data-occupancy="high"] {
+            border-left: 8px solid #b42318 !important;
+        }
+
+        /* Room card header layout */
+        .room-card>div:first-child {
+            display: flex;
+            align-items: center;
+        }
+
+        .room-card>div:first-child>p {
+            flex: 0 0 100px;
+            margin: 0;
+        }
+
+        /* Favorite/Pin button styles */
+        .fav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #ccc;
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 4px;
+            flex: 0 0 32px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fav-btn:hover {
+            color: #6366f1;
+            transform: scale(1.1);
+        }
+
+        .fav-btn.favorited {
+            color: #6366f1;
+        }
+
+        .room-card.is-favorite {
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25) !important;
+            border-top: 3px solid #6366f1 !important;
+        }
+
+        /* Tab Navigation Styles */
+        .ev-tab {
+            padding: 10px 20px;
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            background: var(--badge-bg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-color);
+        }
+
+        .ev-tab:hover {
+            background: var(--control-bg);
+            border-color: var(--card-border);
+        }
+
+        .ev-tab.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        [data-theme="dark"] .ev-tab:not(.active) {
+            background: rgba(40, 40, 70, 0.75);
+        }
+
+        .stat-card {
+            background: var(--card-bg) !important;
+            border-radius: 16px !important;
+            color: var(--text-color);
+        }
+
+        /* ADDED: white cards + occupancy level accent for dark mode */
+        .room-card {
+            background: var(--card-bg) !important;
+        }
+
+        [data-theme="dark"] .fav-btn {
+            color: #888;
+        }
+
+        [data-theme="dark"] .fav-btn:hover,
+        [data-theme="dark"] .fav-btn.favorited {
+            color: #818cf8;
+        }
+
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(var(--bg-gradient-start) 0%, var(--bg-gradient-start) 25%, var(--bg-gradient-end) 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+#campus,
+            #occupancyFilter {
+                padding: 10px 234px;
+                border-radius: 12px;
+                /* Rounded corners */
+                border: 1px solid #ccc;
+                outline: none;
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.2s ease;
+            }
+
+            #campus:focus,
+            #occupancyFilter:focus {
+                border-color: black;
+            }
