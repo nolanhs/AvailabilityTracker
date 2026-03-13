@@ -14,3 +14,5 @@ Using signal feedback to determine if a device is located in the room the system
 ## Value Proposition
 
 Students can save time by locating a study room that is already available instead of spending time searching for one, this can reduce stress and help manage their time better. In addition, students can also observe the most and least busy hours of shared campus spaces, allowing them to plan their schedules, avoid overcrowded areas, and use tech services more efficiently.
+
+No permission is granted to copy, modify, distribute, or use this software without explicit permission from the authors.
